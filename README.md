@@ -1,36 +1,124 @@
-# Caso-1-20MinCoach
+# Case-1-20MinCoach
 ## Instituto Tecnológico de Costa Rica
 ### Escuela de Ingeniería en Computación
 
-### Estudiantes
+### Students
 - Alexander Brenes Garita
 - Andres Baldi Mora
 - Lindsay Nahome Marín Sánchez - 2024163904
 
-### Curso
-Diseño de Software
+### Course
+Software Design
 
-### Grupo: 6
+### Group: 6
 
-### Fecha de entrega: 
-27 de septiembre de 2025
+### Delivery date: 
+September 27, 2025
 
 ---
-## 1.Introducción
-Este repositorio incluye una colección de pruebas de concepto. Sirve como guía para la construcción del software designado. Puede encontrar los ejemplos programados en la carpeta /src. y los diagramas en la carpeta /diagrams. Consulte este documento para ver una especificación más exhaustiva del proyecto.
+## 1.Introduction
+This repository includes a collection of proof of concepts. It serves as a guide for building the designated software. There are some code samples in the /src. folder, and diagrams in the /diagrams folder. Make use of this document to see a more exhaustive specification of the project.
 
-Este documento detalla la arquitectura de la plataforma de coaching 20minCoach. Un sistema que le permite conectarse en sesiones cortas con profesionales en distintas áreas. Este documento describe aspectos necesarios para implementar el software. Entre ellos se incluyen las decisiones que respaldan el diseño, una descripción concisa para cada uno de los módulos y otros aspectos relevantes según la sección.
+This document details the architecture for the coaching platform 20minCoach. A system that allows connection with professionals from a variety of areas on short video sessions. The document describes necessary aspects for the correct implementation of the software. Among these are the decisions that back up the design, instructions and explanations for the proof of concepts, descriptions for all the modules, and other relevant information according to the section.
 
-## 2. Alcance
+## 2. Scope
 Esta iteración del proyecto contempla las funcionalidades base que requiere 20minCoach. A continuación, se hace un listado de las características por presentar en la versión inicial del diseño: 
 
-- Documentación del sistema.
-- Diagrama de arquitectura en capas.
-- Evaluación del software.
-- Pruebas de UI y UX.
-- Pruebas de autorización y autenticación.
+This iteration of the project contemplates the base functionalities for 20minCoach. A list of characteristics for the initial version of the design has been made:
 
-## 3. Componentes del frontend
+- System documentation.
+- Architecture diagram.
+- Class diagram.
+- Technology evaluation.
+- UI and UX tests.
+- Authorization and authentication tests.
+
+## 3. Frontend components
+
+
+### 3.1 Visual components
+
+### 3.2 Controllers
+
+### 3.3 Model
+
+### 3.4 Middleware
+
+### 3.5 Business
+This layer enforces all the business rules for 20minCoach.
+
+Here is a list of the business rules that the system will work with:
+
+##### Coach connection policies
+- The app connects you to the closest coach according to your location.
+- Coaches who are not online must not appear during searches.
+- Coaches are able to activate and deactivate availability at any given time.
+- The session starts when both user and coach hit connect.
+##### Notification policies
+- The coach receives a notification when the user tries to connect.
+- - A request for connection lasts 10min, after that, it expires.
+##### Video session policies
+- The time limit for every session is 20min. Sessions cut after that time.
+- When there is one minute left, the app notifies both users in the session.
+- A user can only review a coach after a session.
+##### Subsription policies
+- The user can cancel subscriptions at any given time.
+##### Max sessions policies
+- The starter package subscription gives the right for 2 sessions every month.
+- The pro package subscription gives the right for 8 sessions every month.
+- Sessions not used do not accumulate for next month.
+##### Pricing policies
+- 20minCoach gains a 40% of the payment for every starter package subscription. 
+  -> $11.99 netIncome -> $5.99 for 2 sessions
+- 20minCoach gains a 20% of the payment for every pro package subscription. 
+  -> $47.99 netIncome -> $5.99 for 8 sessions
+- Coaches gain $3.60 per session at a minimum (1 star).
+- Coaches gains per session increase by 0.60 cents for each star, going to a maximum of $5.99 at 5 stars.
+##### Security policies
+- User passwords are encrypted.
+
+### 3.6 Services
+The platform depends on several APIs to provide its services to the user.
+Here is a brief list of services that must be implemented.
+
+##### Notification service
+
+##### Payment service
+
+##### Security service
+In order to manage user roles and permissions, Auth0
+##### Video session service
+
+##### Geolocation service
+
+##### Image storage service
+
+##### Log service
+
+
+### 3.7 Background jobs
+
+### 3.8 Validators
+
+### 3.9 State management
+
+### 3.10 Styles
+
+### 3.11 Utilities
+
+### 3.12 Exception Handling
+
+### 3.13 Logging
+
+### 3.14 Security
+
+### 3.15 Linter configuration
+
+### 3.16 Build and deployment pipeline
+
+
+
+## 4. Diagrams
 
 
 
