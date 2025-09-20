@@ -1,5 +1,5 @@
 # Case-1-20MinCoach
-## Instituto Tecnológico de Costa Rica
+### Instituto Tecnológico de Costa Rica
 ### Escuela de Ingeniería en Computación
 
 ### Students
@@ -79,22 +79,23 @@ Here is a list of the business rules that the system will work with:
 
 ### 3.6 Services
 The platform depends on several APIs to provide its services to the user.
+
 Here is a brief list of services that must be implemented.
 
 ##### Notification service
-
+For notifications, the API selected is OneSignal.
 ##### Payment service
-
+A variety of payment methods must be included in the system. A factory design is used to create different payment methods that can be configured separately. 
 ##### Security service
-In order to manage user roles and permissions, Auth0
+In order to manage user roles and permissions, Auth0 will be integrated in the system.
 ##### Video session service
-
+The service Daily.co allows 20minCoach to connect users and coaches in video sessions. 
 ##### Geolocation service
-
+Due to its easy integration, Google Maps API will be used for this project.
 ##### Image storage service
-
+Cloudinary is the API proposed for saving avatar and portfolio images.
 ##### Log service
-
+Cloudwatch Frontlogger will register logs on the web app and save them for a 2-year period.
 
 ### 3.7 Background jobs
 
