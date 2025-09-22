@@ -3,7 +3,7 @@
 ### Escuela de Ingeniería en Computación
 
 ### Students
-- Alexander Brenes Garita
+- Alexander Brenes Garita - 2018191805
 - Andres Baldi Mora
 - Lindsay Nahome Marín Sánchez - 2024163904
 
@@ -22,8 +22,6 @@ This repository includes a collection of proof of concepts. It serves as a guide
 This document details the architecture for the coaching platform 20minCoach. A system that allows connection with professionals from a variety of areas on short video sessions. The document describes necessary aspects for the correct implementation of the software. Among these are the decisions that back up the design, instructions and explanations for the proof of concepts, descriptions for all the modules, and other relevant information according to the section.
 
 ## 2. Scope
-Esta iteración del proyecto contempla las funcionalidades base que requiere 20minCoach. A continuación, se hace un listado de las características por presentar en la versión inicial del diseño: 
-
 This iteration of the project contemplates the base functionalities for 20minCoach. A list of characteristics for the initial version of the design has been made:
 
 - System documentation.
@@ -41,8 +39,19 @@ This iteration of the project contemplates the base functionalities for 20minCoa
 ### 3.2 Controllers
 
 ### 3.3 Model
+Main classes included in the system:
+
+- User.
+- Coach.
+- Subscription.
+- Session.
+- Review.
 
 ### 3.4 Middleware
+
+- Logs.
+- Permission validation
+- Error handling.
 
 ### 3.5 Business
 This layer enforces all the business rules for 20minCoach.
@@ -112,14 +121,18 @@ Cloudwatch Frontlogger will register logs on the web app and save them for a 2-y
 ### 3.13 Logging
 
 ### 3.14 Security
+Auth0
 
 ### 3.15 Linter configuration
+ESLint
 
 ### 3.16 Build and deployment pipeline
 
 
 
 ## 4. Diagrams
+Link:
+[Diagrama De Clases](https://lucid.app/lucidchart/9f020ccb-4b82-433d-ac55-5505b58ee891/edit?beaconFlowId=BB83C63995B61803&invitationId=inv_33809063-0bdc-4f47-9466-e854b073f8f9&page=0_0#)
 
 
 
