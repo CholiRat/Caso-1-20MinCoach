@@ -122,6 +122,7 @@ Cloudwatch Frontlogger will register logs on the web app and save them for a 2-y
 
 ### 3.14 Security
 Auth0
+Se tiene que revisar esto
 
 ### 3.15 Linter configuration
 ESLint
