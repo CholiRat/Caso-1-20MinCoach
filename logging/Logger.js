@@ -3,23 +3,10 @@ import { ConsoleLogger } from './ConsoleLogger';
 import { SentryLogger } from './SentryLogger';
 
 class Logger {
-  static instance = null;
   strategy = null;
 
   constructor() {
-    if (Logger.instance) {
-      return Logger.instance;
-    }
-
-    Logger.instance = this;
-    this.strategy = new ConsoleLogger();
-  }
-
-  static getInstance() {
-    if (!Logger.instance) {
-      Logger.instance = new Logger();
-    }
-    return Logger.instance;
+    this.setStrategy('console'); 
   }
 
   setStrategy(strategy) {
@@ -47,6 +34,6 @@ class Logger {
 }
 
 // Create a singleton instance
-const logger = Logger.getInstance();
+const logger = new Logger();
 
 export default logger;
