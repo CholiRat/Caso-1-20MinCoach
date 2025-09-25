@@ -65,7 +65,7 @@ Here is a list of the business rules that the system will work with:
 - The session starts when both user and coach hit connect.
 ##### Notification policies
 - The coach receives a notification when the user tries to connect.
-- - A request for connection lasts 10min, after that, it expires.
+- A request for connection lasts 10min, after that, it expires.
 ##### Video session policies
 - The time limit for every session is 20min. Sessions cut after that time.
 - When there is one minute left, the app notifies both users in the session.
@@ -137,16 +137,13 @@ An entry of the exception catalog may look like this:
     // … Additional optional values
 }
 ```
-Levels categorize the severity of an exception. Errors are classified in one of these three:
--	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
--	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
--	FATAL: For critical failures that compromise the system's integrity or availability.
-
-The message is what will be recorded as the title of the exception in the logs.
-
-The userMessage is the response in natural language that the program communicates to the user.
-
-Additional values may be included depending on what the validator needs to handle the error.
+- Levels categorize the severity of an exception. Errors are classified in one of these three:
+- -	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
+- -	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
+- -	FATAL: For critical failures that compromise the system's integrity or availability.
+- The message is what will be recorded as the title of the exception in the logs.
+- The userMessage is the response in natural language that the program communicates to the user.
+- Additional values may be included depending on what the validator needs to handle the error.
 
 If an error code that does not exist gets sent to the exception handler, the message will be default to code UNKNOWN-001. This is a fallback message for errors in general.
 
