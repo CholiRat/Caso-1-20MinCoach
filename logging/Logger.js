@@ -21,13 +21,13 @@ class Logger {
     }
   }
 
-  log(strategy, level, message, metadata) {
+  log(strategy, level, logInfo) {
     this.setStrategy(strategy);
     const logEntry = {
-      timestamp: new Date(),
-      message,
+      message: logInfo.message,
       level,
-      metadata
+      timestamp: new Date(),
+      logInfo
     };
     this.strategy.log(logEntry);
   }

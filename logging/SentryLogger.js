@@ -4,13 +4,13 @@ import { ILogStrategy } from './ILogStrategy';
 
 export class SentryLogger extends ILogStrategy {
   log(logEntry) {
-    const { level, message, metadata, timestamp } = logEntry;
+    const { message, level, timestamp, logInfo } = logEntry;
     
     const eventData = {
       message,
       level: level.toLowerCase(),
       timestamp,
-      extra: metadata
+      extra: logInfo
     };
 
     Sentry.captureEvent(eventData);

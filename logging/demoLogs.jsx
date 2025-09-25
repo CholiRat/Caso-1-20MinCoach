@@ -1,6 +1,7 @@
 // demoLogs.jsx
 import { useLogger } from './useLogger';
 import * as Sentry from '@sentry/react';
+import { useExceptionHandler } from '../exceptionHandling/useExceptionHandler.js'; 
 
 // Initialize Sentry at the app level
 Sentry.init({
@@ -8,6 +9,7 @@ Sentry.init({
 });
 
 function DemoLogs() {
+  const exceptionHandler = useExceptionHandler('DemoLogs');
   const logger = useLogger('DemoLogs');
 
   // Example function to trigger an error and log it
@@ -15,10 +17,7 @@ function DemoLogs() {
     try {
       throw new Error('Test error');
     } catch (error) {
-      // strategy: specifies the logging strategy
-      // message: the log message
-      // metadata: optional metadata
-      logger.error('sentry', 'An error occurred', { error: error.message, code: '123', stack: error.stack });
+      exceptionHandler.handleException('VALIDATION_001');
     }
   };
 

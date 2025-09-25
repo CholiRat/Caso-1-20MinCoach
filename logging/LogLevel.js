@@ -2,7 +2,7 @@ export const LogLevel = {
   TRACE: "TRACE",
   DEBUG: "DEBUG",
   INFO: "INFO",
-  WARN: "WARN",
+  WARN: "WARNING",
   ERROR: "ERROR",
   FATAL: "FATAL"
 };

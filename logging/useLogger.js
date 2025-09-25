@@ -4,23 +4,23 @@ import logger from './Logger';
 import { LogLevel } from './LogLevel';
 
 export function useLogger(component) {
-  const log = useCallback((strategy, level, message, metadata = {}) => {
+  const log = useCallback((strategy, level, logInfo = {}) => {
     // Add component information to metadata
     const enhancedMetadata = {
       ...metadata,
       component
     };
     
-    logger.log(strategy, level, message, enhancedMetadata);
+    logger.log(strategy, level, logInfo, enhancedMetadata);
   }, [component]);
 
   // Convenience methods
   return {
-    debug: (strategy, message, metadata) => log(strategy, LogLevel.DEBUG, message, metadata),
-    info: (strategy, message, metadata) => log(strategy, LogLevel.INFO, message, metadata),
-    warn: (strategy, message, metadata) => log(strategy, LogLevel.WARN, message, metadata),
-    error: (strategy, message, metadata) => log(strategy, LogLevel.ERROR, message, metadata),
-    fatal: (strategy, message, metadata) => log(strategy, LogLevel.FATAL, message, metadata),
+    debug: (strategy, errorInfo) => log(strategy, LogLevel.DEBUG, errorInfo),
+    info: (strategy, errorInfo) => log(strategy, LogLevel.INFO, errorInfo),
+    warn: (strategy, errorInfo) => log(strategy, LogLevel.WARN, errorInfo),
+    error: (strategy, errorInfo) => log(strategy, LogLevel.ERROR, errorInfo),
+    fatal: (strategy, errorInfo) => log(strategy, LogLevel.FATAL, errorInfo),
     // Custom log with strategy
     log
   };
