@@ -117,6 +117,65 @@ Cloudwatch Frontlogger will register logs on the web app and save them for a 2-y
 ### 3.11 Utilities
 
 ### 3.12 Exception Handling
+This layer centralizes all error management for the system. Its primary function is to process error codes and generate consistent user messages and log entries.
+
+It will receive most of its requests from the validators layer, and send petitions to the Logger in order to save error logs.
+
+The layer consists of a single object, the ExceptionHandler class. It is implemented as a Singleton.
+
+#### Error Catalog:
+
+The handler uses a manual called the ExceptionCatalog.js, which is a dictionary that maps error codes to their corresponding information.
+
+An entry of the exception catalog may look like this:
+
+```js
+'ERRORCODE_001': {
+    level: 'WARN', // Obligatory
+    message: 'Validation failed', // Obligatory
+    userMessage: 'Please verify the provided data.', // Obligatory
+    // … Additional optional values
+}
+```
+Levels categorize the severity of an exception. Errors are classified in one of these three:
+-	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
+-	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
+-	FATAL: For critical failures that compromise the system's integrity or availability.
+
+The message is what will be recorded as the title of the exception in the logs.
+
+The userMessage is the response in natural language that the program communicates to the user.
+
+Additional values may be included depending on what the validator needs to handle the error.
+
+If an error code that does not exist gets sent to the exception handler, the message will be default to code UNKNOWN-001. This is a fallback message for errors in general.
+
+The obligatory fields must always be filled in. Forgetting to include them might lead to unexpected effects in the log entries and user feedback.
+
+You may expand the catalog through the development process. Divide the sections of the catalog per domain.
+
+#### Implementation:
+To implement, only the ExceptionHandler.js should be exported. Since it is a Singleton object, it is already initialized.
+
+For standard code (inside a folder):
+```js
+import exceptionHandler from '../exceptionHandling/exceptionHandler';
+```
+For React components, import the hook:
+```js
+import { useExceptionHandler } from '../exceptionHandling/useExceptionHandler.js';
+```
+#### How to use:
+
+A typical call to the exception handler may look like this:
+```js
+try {
+  throw new Error('Test error');
+} catch (error) {
+  let response = exceptionHandler.handleException('ERRORCODE_001');
+}
+```
+The handleException method is called with an error code as a string. It returns an object containing the userMessage and any other additional data. The validator or class that makes use of the exception handler must know what to do with the recieved message.
 
 ### 3.13 Logging
 
