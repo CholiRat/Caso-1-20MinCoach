@@ -178,6 +178,7 @@ The design we chose to create the page is a Moder UI Design widely used in moder
 
 #### Design System:
 Link of the page: [Pagina Web](https://20mincoach-six.vercel.app/)
+
 We wanted to use a consistent design with semantic tokens for colors, typography, and spacing.
 
 - **Color palette:** blue tones were used for night mode and day mode, and bright colors were used for the buttons and text to attract the customer's attention and encourage them to click on the buttons we want them to click on.
