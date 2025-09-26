@@ -114,24 +114,46 @@ Here is a list of the business rules that the system will work with:
 - User passwords are encrypted.
 
 ### 3.6 Services
-The platform depends on several APIs to provide its services to the user.
 
-Here is a brief list of services that must be implemented.
+All services will be kept in their own folder, except the security module, which will be separate from this one.
+
+The system integrates several third-party APIs to provide its services to the user. As such, the services layer includes an abstract class to generalize the creation of API services. All API services inherit from APITemplate.js for consistency:
+```js
+class APITemplate {
+  apiKey = '';
+  baseUrl = '';
+  headers = [];
+  configuration = {};
+
+  // Base configuration for API services
+  constructor() {
+    
+  }
+   // Create and configure HTTP client instance
+  initialize() {
+
+  }
+}
+```
+
+At the moment, the only implementation is the security and logging service. However, a plan has been established to decide the specific clients that the web app will use. The following section justifies the decisions made for service technology, prioritizing pricing and features.
+
+#### Concrete services:
 
 ##### Notification service
-For notifications, the API selected is OneSignal.
+For notifications, the API selected is OneSignal. It has a free plan which includes unlimited mobile push & web push for up to 10,000 subscribers.
 ##### Payment service
-A variety of payment methods must be included in the system. A factory design is used to create different payment methods that can be configured separately. 
+A variety of payment methods must be included in the system. An abstract parent class is used to create different payment methods that can be configured separately.
 ##### Security service
-In order to manage user roles and permissions, Auth0 will be integrated in the system.
+In order to manage user roles and permissions, Auth0 will be integrated in the system. It manages must security processes on its own, assuring protection to coaches and common users’ data.
 ##### Video session service
-The service Daily.co allows 20minCoach to connect users and coaches in video sessions. 
+The service Daily.co allows 20minCoach to connect users and coaches in video sessions. It is compatible with react and negotiates a reasonable price of $0.0015 per videocall. Since 20minCoach gives 8 sessions per month at maximum, payments won’t be excessive.
 ##### Geolocation service
-Due to its easy integration, Google Maps API will be used for this project.
+Due to its easy integration, Google Maps API will be used for this project. It is specially useful to connect users according to their proximity by calculating distances.
 ##### Image storage service
-Cloudinary is the API proposed for saving avatar and portfolio images.
+Cloudinary is the API proposed for saving avatar and portfolio images. It includes 25 GB of storage with its free plan.
 ##### Log service
-Cloudwatch Frontlogger will register logs on the web app and save them for a 2-year period.
+Sentry will register logs on the web app and save them for a 2-year period. Its subscription is different because it escalates by plans and not by storage usage.
 
 ### 3.7 Background jobs
 
