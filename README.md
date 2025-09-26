@@ -34,9 +34,9 @@ This iteration of the project contemplates the base functionalities for 20minCoa
 ## 3. Project installation
 This section provides the instructions to set up the development environment and run the project locally. Ensure you meet all prerequisites before proceeding with the installation steps.
 #### Prerequisites:
-•	Node.js
-•	Visual Studio Code
-•	Vite
+-	Node.js
+-	Visual Studio Code
+-	Vite
 #### Instructions to download the repository.
 1.	Clone the repository.
 ```sh
