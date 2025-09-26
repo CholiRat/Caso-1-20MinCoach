@@ -16,7 +16,7 @@ Software Design
 September 27, 2025
 
 ---
-## 1.Introduction
+## 1. Introduction
 This repository includes a collection of proof of concepts. It serves as a guide for building the designated software. There are some code samples in the /src. folder, and diagrams in the /diagrams folder. Make use of this document to see a more exhaustive specification of the project.
 
 This document details the architecture for the coaching platform 20minCoach. A system that allows connection with professionals from a variety of areas on short video sessions. The document describes necessary aspects for the correct implementation of the software. Among these are the decisions that back up the design, instructions and explanations for the proof of concepts, descriptions for all the modules, and other relevant information according to the section.
@@ -58,14 +58,14 @@ npm install --save-dev eslint vite @vitejs/plugin-react eslint-plugin-react esli
 
 You are all set to start the implementation of 20minCoach.
 
-## 3. Frontend components
+## 4. Frontend components
 
 
-### 3.1 Visual components
+### 4.1 Visual components
 
-### 3.2 Controllers
+### 4.2 Controllers
 
-### 3.3 Model
+### 4.3 Model
 Main classes included in the system:
 
 - User.
@@ -74,13 +74,13 @@ Main classes included in the system:
 - Session.
 - Review.
 
-### 3.4 Middleware
+### 4.4 Middleware
 
 - Logs.
 - Permission validation
 - Error handling.
 
-### 3.5 Business
+### 4.5 Business
 This layer enforces all the business rules for 20minCoach. Inside, there are multiple classes that follow a nomenclature of “[domain] + Policy”. There is no object design pattern since every policy class is its own catalog with methods that verify business rules are being followed.
 
 Business policies receive requests from the model layer, and communicate with the services layer.
@@ -124,7 +124,7 @@ Each of these areas use policies that mirror the business rules. Here is a list 
 
 Business rules might change along the system’s lifespan. Their modifications must be done only through the business layer.
 
-### 3.6 Services
+### 4.6 Services
 
 All services will be kept in their own folder, except the security module, which will be separate from this one.
 
@@ -166,17 +166,17 @@ Cloudinary is the API proposed for saving avatar and portfolio images. It includ
 ##### Log service
 Sentry will register logs on the web app and save them for a 2-year period. Its subscription is different because it escalates by plans and not by storage usage.
 
-### 3.7 Background jobs
+### 4.7 Background jobs
 
-### 3.8 Validators
+### 4.8 Validators
 
-### 3.9 State management
+### 4.9 State management
 
-### 3.10 Styles
+### 4.10 Styles
 
-### 3.11 Utilities
+### 4.11 Utilities
 
-### 3.12 Exception Handling
+### 4.12 Exception Handling
 This layer centralizes all error management for the system. Its primary function is to process error codes and generate consistent user messages and log entries.
 
 It will receive most of its requests from the validators layer, and send petitions to the Logger in order to save error logs.
@@ -234,7 +234,7 @@ try {
 ```
 The handleException method is called with an error code as a string. It returns an object containing the userMessage and any other additional data. The validator or class that makes use of the exception handler must know what to do with the recieved message.
 
-### 3.13 Logging
+### 4.13 Logging
 This layer records actions performed by users, services, and the system. It can receive requests from any layer of the program.
 
 The Logger uses the Strategy pattern to support different logging methods (e.g., console, Sentry, local storage). This allows for different log presentation and storage of log entries.
@@ -302,11 +302,11 @@ Sentry's website displays statistics for logged events. The main dashboard shows
 Selecting a specific log type provides detailed information: Log dates and frequency statistics, error traces and circumstances, and additional context data as given in the logger.
 
 
-### 3.14 Security
+### 4.14 Security
 Auth0
 
 
-### 3.15 Linter configuration
+### 4.15 Linter configuration
 The project uses ESLint as the linting tool. It includes predefined rules and conventions for code quality. The linter is not active by default and must be executed manually in the command line.
 
 #### Implementation:
@@ -332,7 +332,7 @@ Custom rules can be implemented to enforce specific coding styles. The current i
 
 
 
-## 4. Diagram
+## 5. Diagram
 
 ![Diagrama De Clases](diagrams/ClassDiagramImage.png)
 
