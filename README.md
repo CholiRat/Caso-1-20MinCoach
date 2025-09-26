@@ -32,6 +32,31 @@ This iteration of the project contemplates the base functionalities for 20minCoa
 - Authorization and authentication tests.
 
 ## 3. Project installation
+This section provides the instructions to set up the development environment and run the project locally. Ensure you meet all prerequisites before proceeding with the installation steps.
+#### Prerequisites:
+•	Node.js
+•	Visual Studio Code
+•	Vite
+#### Instructions to download the repository.
+1.	Clone the repository.
+```sh
+git clone <repo-url>
+cd <repo-folder>
+```
+2.   Install dependencies (run from the project root).
+```sh
+npm install
+```
+3.	Run the project:
+```sh
+npm run dev
+```
+4.	Additionally, install these commonly required packages locally if absent:
+```sh
+npm install --save-dev eslint vite @vitejs/plugin-react eslint-plugin-react eslint-plugin-react-hooks
+```
+
+You are all set to start the implementation of 20minCoach.
 
 ## 3. Frontend components
 
