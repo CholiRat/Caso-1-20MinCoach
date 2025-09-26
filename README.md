@@ -36,6 +36,7 @@ This section provides the instructions to set up the development environment and
 #### Prerequisites:
 -	Node.js
 -	Visual Studio Code
+- React
 -	Vite
 #### Instructions to download the repository.
 1.	Clone the repository.
@@ -173,6 +174,17 @@ Sentry will register logs on the web app and save them for a 2-year period. Its 
 ### 4.9 State management
 
 ### 4.10 Styles
+The design we chose to create the page is a Moder UI Design widely used in modern pages of 2025, which has the following characteristics:
+
+#### Design System:
+We wanted to use a consistent design with semantic tokens for colors, typography, and spacing.
+- Color palette: blue tones were used for night mode and day mode, and bright colors were used for the buttons and text to attract the customer's attention and encourage them to click on the buttons we want them to click on.
+We focused on using green so that customers would concentrate more on the information on the button/text, and red so that they would not give it much importance (such as price or duration).
+
+![Paleta De Colores Nocturno](img/paletaDeColores.jpg)
+
+![Paleta De Colores Dia](img/paletaDeColoresBlanca.jpg)
+
 
 ### 4.11 Utilities
 
@@ -328,7 +340,7 @@ Rules are defined in the eslint.config.mjs file. The configuration includes ESLi
 
 Custom rules can be implemented to enforce specific coding styles. The current iteration includes the no-spanish-symbols rule, which prohibits the use of the character "ñ" in variable names.
 
-### 3.16 Build and deployment pipeline
+### 4.16 Build and deployment pipeline
 
 
 
