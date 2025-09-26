@@ -31,6 +31,8 @@ This iteration of the project contemplates the base functionalities for 20minCoa
 - UI and UX tests.
 - Authorization and authentication tests.
 
+## 3. Project installation
+
 ## 3. Frontend components
 
 
@@ -248,6 +250,13 @@ Auth0
 
 ### 3.15 Linter configuration
 The project uses ESLint as the linting tool. It includes predefined rules and conventions for code quality. The linter is not active by default and must be executed manually in the command line.
+
+#### Implementation:
+If the project is missing the eslint-plugin-react, run this command on the bash:
+```sh
+npm install eslint-plugin-react --save-dev
+```
+
 #### How to use:
 Run the linter on JavaScript files and React files using the command:
 ```sh
