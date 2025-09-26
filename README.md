@@ -177,14 +177,75 @@ Sentry will register logs on the web app and save them for a 2-year period. Its 
 The design we chose to create the page is a Moder UI Design widely used in modern pages of 2025, which has the following characteristics:
 
 #### Design System:
+Link of the page: [Pagina Web](https://20mincoach-six.vercel.app/)
 We wanted to use a consistent design with semantic tokens for colors, typography, and spacing.
-- Color palette: blue tones were used for night mode and day mode, and bright colors were used for the buttons and text to attract the customer's attention and encourage them to click on the buttons we want them to click on.
+
+- **Color palette:** blue tones were used for night mode and day mode, and bright colors were used for the buttons and text to attract the customer's attention and encourage them to click on the buttons we want them to click on.
 We focused on using green so that customers would concentrate more on the information on the button/text, and red so that they would not give it much importance (such as price or duration).
 
+##### Paleta De Colores Nocturno
 ![Paleta De Colores Nocturno](img/paletaDeColores.jpg)
 
+##### Paleta De Colores Dia
 ![Paleta De Colores Dia](img/paletaDeColoresBlanca.jpg)
 
+- **Typography:** A modern **sans-serif** font was used for the typography, as it is one of the most widely used fonts on websites in 2025.
+**Roboto** was used to complement the sans-serif font, giving the website a modern and simple touch. Incidentally, this typography is common for projects that use Vite. 
+
+##### Sans-Serif
+![Sans-Serif](img/sans-serif.jpg)
+
+##### Roboto
+![Roboto](img/sans-serifRoboto.jpg)
+
+- **Spacing:** To give the page enough space so that it looks like a clean design with sections. For the CSS, a space of:
+
+#### Vertical sections
+```css
+py-12
+```
+#### Horizontal padding
+```css
+px-6
+```
+#### Between elements (gap)
+```css
+gap-4
+```
+
+- **Semantics:** A classic structure is used on web pages in 2025. With a hierarchy of buttons to attract the customer's attention.
+  - Header: logo + simple navigation.
+  - Hero: large title, explanatory text.
+  - Features: cards with icons/titles/text, organized in a responsive grid.
+  - Secondary CTA: section with alternative background + highlighted button.
+  - Footer: minimalist with secondary links.
+
+
+#### Design System:
+The shadcn/ui library was used, which is compatible with the TypeScript programming language and easy to integrate with Tailwind CSS.
+It is a simple and modern design.
+
+![Design System](img/shadcn.png)
+
+#### Responsive Design:
+By using Tailwind CSS, the design is responsive for mobile devices and adapts to the screen size.
+
+![Responsive Mobile](img/responsiveMobile.jpg)
+
+#### Professional SaaS:
+Since the goal is to offer a specialized service to help customers, we have implemented a system called Saas, which we configure, customize, and implement on our website in order to sell our product to customers in the fastest and most efficient way possible.
+
+#### Dark/Light Mode:
+
+##### Dark Mode
+![Dark mode](img/Dark.jpg)
+
+##### Light Mode
+![Light Mode](img/Light.jpg)
+
+#### Card-based Layout: 
+Card-based design for organizing content
+![Cards](img/Cards.jpg)
 
 ### 4.11 Utilities
 
