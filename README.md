@@ -253,7 +253,10 @@ ESLint
 
 
 
-## 4. Diagrams
+## 4. Diagram
+
+![Diagrama De Clases](diagrams/ClassDiagramImage.png)
+
 Link:
 [Diagrama De Clases](https://lucid.app/lucidchart/9f020ccb-4b82-433d-ac55-5505b58ee891/edit?beaconFlowId=BB83C63995B61803&invitationId=inv_33809063-0bdc-4f47-9466-e854b073f8f9&page=0_0#)
 
