@@ -81,37 +81,48 @@ Main classes included in the system:
 - Error handling.
 
 ### 3.5 Business
-This layer enforces all the business rules for 20minCoach.
+This layer enforces all the business rules for 20minCoach. Inside, there are multiple classes that follow a nomenclature of “[domain] + Policy”. There is no object design pattern since every policy class is its own catalog with methods that verify business rules are being followed.
 
-Here is a list of the business rules that the system will work with:
+Business policies receive requests from the model layer, and communicate with the services layer.
 
-##### Coach connection policies
-- The app connects you to the closest coach according to your location.
-- Coaches who are not online must not appear during searches.
+The system domain circles around the classes proposed for the model.
+- CommonUser
+- CoachUser
+- Session
+- Subscription
+- Review
+- Payment
+- Notification
+
+Each of these areas use policies that mirror the business rules. Here is a list of the business rules that the system will work with:
+
+##### Common User policies
+- User passwords are encrypted.
+##### Coach User policies
 - Coaches are able to activate and deactivate availability at any given time.
-- The session starts when both user and coach hit connect.
-##### Notification policies
-- The coach receives a notification when the user tries to connect.
-- A request for connection lasts 10min, after that, it expires.
-##### Video session policies
+##### Session policies
 - The time limit for every session is 20min. Sessions cut after that time.
 - When there is one minute left, the app notifies both users in the session.
-- A user can only review a coach after a session.
+- The app connects you to the closest coach according to your location.
+- Coaches who are not online must not appear during searches.
+- The session starts when both user and coach hit connect.
 ##### Subsription policies
 - The user can cancel subscriptions at any given time.
-##### Max sessions policies
 - The starter package subscription gives the right for 2 sessions every month.
 - The pro package subscription gives the right for 8 sessions every month.
 - Sessions not used do not accumulate for next month.
-##### Pricing policies
-- 20minCoach gains a 40% of the payment for every starter package subscription. 
-  -> $11.99 netIncome -> $5.99 for 2 sessions
-- 20minCoach gains a 20% of the payment for every pro package subscription. 
-  -> $47.99 netIncome -> $5.99 for 8 sessions
+##### Review policies
+- A user can only review a coach after a session.
+##### Payment policies
+- 20minCoach gains a 40% of the payment for every starter package subscription. -> $11.99 netIncome -> $5.99 for 2 sessions
+- 20minCoach gains a 20% of the payment for every pro package subscription. -> $47.99 netIncome -> $5.99 for 8 sessions
 - Coaches gain $3.60 per session at a minimum (1 star).
 - Coaches gains per session increase by 0.60 cents for each star, going to a maximum of $5.99 at 5 stars.
-##### Security policies
-- User passwords are encrypted.
+##### Notification policies
+- The coach receives a notification when the user tries to connect.
+- A request for connection lasts 10min, after that, it expires.
+
+Business rules might change along the system’s lifespan. Their modifications must be done only through the business layer.
 
 ### 3.6 Services
 
