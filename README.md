@@ -247,7 +247,19 @@ Auth0
 
 
 ### 3.15 Linter configuration
-ESLint
+The project uses ESLint as the linting tool. It includes predefined rules and conventions for code quality. The linter is not active by default and must be executed manually in the command line.
+#### How to use:
+Run the linter on JavaScript files and React files using the command:
+```sh
+npm run lint [filename.js]
+```
+It will show every rule violated that the project files contain.
+
+All code must be examined through the linter tool to assure its quality. Both errors and warnings must be addressed to maintain code format and functionality.
+#### Configuration:
+Rules are defined in the eslint.config.mjs file. The configuration includes ESLint's recommended rule package. The complete list of available rules can be found in the [ESLint Rules Documentation](https://eslint.org/docs/latest/rules)
+
+Custom rules can be implemented to enforce specific coding styles. The current iteration includes the no-spanish-symbols rule, which prohibits the use of the character "ñ" in variable names.
 
 ### 3.16 Build and deployment pipeline
 
