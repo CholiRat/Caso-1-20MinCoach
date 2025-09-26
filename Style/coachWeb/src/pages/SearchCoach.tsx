@@ -53,7 +53,7 @@ const SearchCoach = () => {
       specialties: ["Ansiedad", "Depresión"],
       rating: 4.9,
       sessions: 456,
-      location: "Medellín",
+      location: "San Jose",
       available: true,
       image: "/placeholder.svg"
     },
