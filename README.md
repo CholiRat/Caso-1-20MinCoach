@@ -138,9 +138,9 @@ An entry of the exception catalog may look like this:
 }
 ```
 - Levels categorize the severity of an exception. Errors are classified in one of these three:
-- -	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
-- -	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
-- -	FATAL: For critical failures that compromise the system's integrity or availability.
+  - WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
+  - ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
+  - FATAL: For critical failures that compromise the system's integrity or availability.
 - The message is what will be recorded as the title of the exception in the logs.
 - The userMessage is the response in natural language that the program communicates to the user.
 - Additional values may be included depending on what the validator needs to handle the error.
@@ -175,10 +175,76 @@ try {
 The handleException method is called with an error code as a string. It returns an object containing the userMessage and any other additional data. The validator or class that makes use of the exception handler must know what to do with the recieved message.
 
 ### 3.13 Logging
+This layer records actions performed by users, services, and the system. It can receive requests from any layer of the program.
+
+The Logger uses the Strategy pattern to support different logging methods (e.g., console, Sentry, local storage). This allows for different log presentation and storage of log entries.
+
+The logging folder includes these components: 
+-	Logger: The main class that brings the log method.
+-	ILoggerStrategy: Interface that manages the current strategy of the Logger.
+-	ConsoleStrategy, SentryStrategy, etc.: Multiple logging providers which implement the log() method in a different way.
+-	LogLevel: An enumeration class that defines log severity levels. There are six distinct log levels, each with a specific purpose:
+  -	TRACE: Captures detailed steps of a process during debugging. Use only with the ConsoleStrategy.
+  -	DEBUG: Diagnoses errors by logging specific moments in a procedure during development. Use only with the ConsoleStrategy.
+  -	INFO: Records successful operations and general system events (e.g., "login successful").
+  -	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
+  -	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
+  -	FATAL: For critical failures that compromise the system's integrity or availability.
+
+#### Implementation:
+
+The Logger.js file should be exported. The logger is pre-initialized upon import.
+
+For standard code (inside a folder):
+```js
+import logger from '../logging/Logger';
+import { LogLevel } from '../logging/LogLevel';
+```
+For React components, import the hook:
+```js
+import { useLogger } from './useLogger';
+```
+#### How to use:
+The Logger class has a general log() method. The call format is:
+```js
+logger.log('strategy', LogLevel.WARN, logInfo);
+```
+
+In react components, the useLogger  hook provides convenience methods that omit the LogLevel parameter:
+```js
+debug('strategy', logInfo);
+info('strategy', logInfo);
+warn('strategy', logInfo);
+error('strategy', logInfo);
+fatal('strategy', logInfo);
+```
+The logInfo parameter is an object that must include the following obligatory fields:
+```js
+let logInfo = {
+    level: 'WARN', // Obligatory
+    message: 'Validation failed', // Obligatory
+    // … Additional optional values
+};
+```
+Additional values can be included as needed for specific log types.
+
+Unlike the exception handler, the logger does not return any value.
+
+#### Sentry:
+Sentry is the primary logging service. It provides a cost-effective alternative to services like AWS Cloudwatch or Google Cloud Logging since the pricing increments by tier and not by storage amount. The subscription plan for this project is the Team plan ($26 dollars a month), which allows for collaborators to view the dashboard, unlimited memory, and tracing features.
+
+To access the platform, you have to create a Sentry account and ask for the respective credentials to be added to the logger project.
+
+Logs are stored in Sentry for a period of two years. After two years, logs are moved to local storage.
+
+Sentry's website displays statistics for logged events. The main dashboard shows the most frequent and recent log types.
+
+Selecting a specific log type provides detailed information: Log dates and frequency statistics, error traces and circumstances, and additional context data as given in the logger.
+
 
 ### 3.14 Security
 Auth0
-Se tiene que revisar esto
+
 
 ### 3.15 Linter configuration
 ESLint
