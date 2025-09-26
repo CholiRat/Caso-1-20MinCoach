@@ -184,12 +184,12 @@ The logging folder includes these components:
 -	ILoggerStrategy: Interface that manages the current strategy of the Logger.
 -	ConsoleStrategy, SentryStrategy, etc.: Multiple logging providers which implement the log() method in a different way.
 -	LogLevel: An enumeration class that defines log severity levels. There are six distinct log levels, each with a specific purpose:
-  -	TRACE: Captures detailed steps of a process during debugging. Use only with the ConsoleStrategy.
-  -	DEBUG: Diagnoses errors by logging specific moments in a procedure during development. Use only with the ConsoleStrategy.
-  -	INFO: Records successful operations and general system events (e.g., "login successful").
-  -	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
-  -	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
-  -	FATAL: For critical failures that compromise the system's integrity or availability.
+    -	TRACE: Captures detailed steps of a process during debugging. Use only with the ConsoleStrategy.
+    -	DEBUG: Diagnoses errors by logging specific moments in a procedure during development. Use only with the ConsoleStrategy.
+    -	INFO: Records successful operations and general system events (e.g., "login successful").
+    -	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
+    -	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
+    -	FATAL: For critical failures that compromise the system's integrity or availability.
 
 #### Implementation:
 
