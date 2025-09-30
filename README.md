@@ -48,11 +48,15 @@ cd <repo-folder>
 ```sh
 npm install
 ```
-3.	Run the project:
+3.  Install Auth0.
+``` sh
+npm install @auth0/auth0-react
+```
+4.	Run the project:
 ```sh
 npm run dev
 ```
-4.	Additionally, install these commonly required packages locally if absent:
+5.	Additionally, install these commonly required packages locally if absent:
 ```sh
 npm install --save-dev eslint vite @vitejs/plugin-react eslint-plugin-react eslint-plugin-react-hooks
 ```
@@ -448,7 +452,15 @@ The logInfo field must ALWAYS include a message argument.
 Unlike the exceptions, the logs do not return any value.
 
 ### 4.14 Security
-Auth0
+We will use Auth0 software for security.
+Because it works as an Identity Provider (IdP) and integrates very well with React.
+We will also use it because Auth0 already has login and password recovery integrated and tested.
+
+It also makes the login connection easier, because you can log in with your Google, Facebook, GitHub, or other accounts.
+
+``` sh
+src/config/auth0.js
+```
 
 
 ### 4.15 Linter configuration
