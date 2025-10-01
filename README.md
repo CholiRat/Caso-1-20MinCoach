@@ -264,7 +264,7 @@ For React components, import the [useExceptionHandler.js](src/hooks/useException
 ```js
 import { useExceptionHandler } from '../hooks/useExceptionHandler.js';
 ```
-#### Validator example:
+#### Usage in validator:
 A validator using the exception handler must do the same as the following.
 ```js
 import { z } from 'zod';
@@ -311,7 +311,7 @@ export class CommonUserValidator extends IValidator {
 
 export default CommonUserValidator;
 ```
-#### React component example:
+#### Usage in React components:
 A React component that uses the exceptionHandler follows a similar pattern, the main difference is the import being the hook useExceptionHandler.js found in the [hooks folder]( src/hooks):
 ```js
 import { useExceptionHandler } from '../hooks/useExceptionHandler.js';   // IMPORT THE HOOK
@@ -358,72 +358,94 @@ You may expand the catalog through the development process. Following the templa
 
 
 ### 4.13 Logging
-This layer records actions performed by users, services, and the system. It can receive requests from any layer of the program.
-
-The Logger uses the Strategy pattern to support different logging methods (e.g., console, Sentry, local storage). This allows for different log presentation and storage of log entries.
-
-The logging folder includes these components: 
--	Logger: The main class that brings the log method.
--	ILoggerStrategy: Interface that manages the current strategy of the Logger.
--	ConsoleStrategy, SentryStrategy, etc.: Multiple logging providers which implement the log() method in a different way.
--	LogLevel: An enumeration class that defines log severity levels. There are six distinct log levels, each with a specific purpose:
-    -	TRACE: Captures detailed steps of a process during debugging. Use only with the ConsoleStrategy.
-    -	DEBUG: Diagnoses errors by logging specific moments in a procedure during development. Use only with the ConsoleStrategy.
-    -	INFO: Records successful operations and general system events (e.g., "login successful").
-    -	WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
-    -	ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
-    -	FATAL: For critical failures that compromise the system's integrity or availability.
-
-#### Implementation:
-
-The Logger.js file should be exported. The logger is pre-initialized upon import.
-
-For standard code (inside a folder):
+This layer records actions performed by users, services, and the system. It can receive requests from any layer of the program. Refer to the [logging folder]( src/logging) to see all its components.
+#### Imports:
+For standard javascript code, import the [Logger.js](src/logging/Logger.js) class, and the [LogLevel.js]( src/logging/LogLevel.js) enumeration. The logger already comes initialized.
 ```js
 import logger from '../logging/Logger';
-import { LogLevel } from '../logging/LogLevel';
+import { LogLevel } from '../logging/LogLevel';  // TO SPECIFY THE SEVERITY LEVEL
 ```
-For React components, import the hook:
+For React components, import the [useLogger.js]( src/hooks/useLogger.js) hook:
+```js	
+import { useLogger } from '../hooks/useLogger';  // Requires to be initialized
+```
+#### Strategies:
+Logs use different strategies to record information. As of now, two alternatives are proposed: [ConsoleLogger.js]( src/logging/ConsoleLogger.js) and [SentryStrategy.js]( src/logging/SentryLogger.js). Each with their own method to save the logs. More strategies might be added in the future, following the ILoggerStrategy structure.
+```js	
+// ILogStrategy.js
+export class ILogStrategy {
+  log(logEntry) {
+    throw new Error('log method must be implemented');
+  }
+}
+```
+#### Usage in Javascript modules:
+This is an example of how to use the logger class. In this case, it will be used in the services layer to mark the initialization of a service.
 ```js
-import { useLogger } from './useLogger';
+import APITemplate from './APITemplate.js';
+import * as Sentry from '@sentry/react';
+import logger from '../logging/Logger';            // IMPORT AN INSTANCE OF THE LOGGER
+import { LogLevel } from '../logging/LogLevel';  // IMPORT LOGLEVEL TO USE THE LOGGER METHOD
+
+class LogService extends APITemplate {
+
+  constructor() {
+    super();
+    this.baseUrl = 'https://dsn.ingest.us.sentry.io';
+  }
+
+  initialize() {
+// CALL THE LOGGER WITH THE METHOD LOG, SELECT A STRATEGY, SELECT A LOG LEVEL, ADD EXTRA METADATA
+    logger.log('console', LogLevel.INFO, {message: 'LogService initialized successfully'})
+    Sentry.init({
+    dsn: this.baseUrl
+    });
+
+  }
+}
+
+export default LogService;
 ```
-#### How to use:
-The Logger class has a general log() method. The call format is:
+#### Usage in React components:
+The hook includes convenience methods that omit the implementation of LogLevels in react components.
 ```js
-logger.log('strategy', LogLevel.WARN, logInfo);
-```
 
-In react components, the useLogger  hook provides convenience methods that omit the LogLevel parameter:
+    debug: (strategy, logInfo) => log(strategy, LogLevel.DEBUG, logInfo);
+    info: (strategy, logInfo) => log(strategy, LogLevel.INFO, logInfo);
+    warn: (strategy, logInfo) => log(strategy, LogLevel.WARN, logInfo);
+    error: (strategy, logInfo) => log(strategy, LogLevel.ERROR, logInfo);
+    fatal: (strategy, logInfo) => log(strategy, LogLevel.FATAL, logInfo);
+```
+This is an example that sends an INFO log when interacting with a button from the user interface.
 ```js
-debug('strategy', logInfo);
-info('strategy', logInfo);
-warn('strategy', logInfo);
-error('strategy', logInfo);
-fatal('strategy', logInfo);
+
+import { useLogger } from '../hooks/useLogger';        // IMPORT THE HOOK
+
+function Component() {
+  const logger = useLogger('Component');                  // SPECIFY THE COMPONENT WHERE THIS LOGGER BELONGS
+
+  const saveData = () => {
+// CALL THE LOG WITH A CONVENIENCE METHOD TO AVOID THE LOGLEVEL IMPORT. 
+// CHOOSE STRATEGY AND ADD EXTRA METADATA
+      logger.info('sentry', {message: 'Data saved successfully'});           
+      
+  };
+
+  return (
+    <div>
+      <h1>Logging Example</h1>
+      <button onClick={saveData}>
+        Save Data
+      </button>
+    </div>
+  );
+}
+
+export default Component;
 ```
-The logInfo parameter is an object that must include the following obligatory fields:
-```js
-let logInfo = {
-    level: 'WARN', // Obligatory
-    message: 'Validation failed', // Obligatory
-    // … Additional optional values
-};
-```
-Additional values can be included as needed for specific log types.
+The logInfo field must ALWAYS include a message argument.
 
-Unlike the exception handler, the logger does not return any value.
-
-#### Sentry:
-Sentry is the primary logging service. It provides a cost-effective alternative to services like AWS Cloudwatch or Google Cloud Logging since the pricing increments by tier and not by storage amount. The subscription plan for this project is the Team plan ($26 dollars a month), which allows for collaborators to view the dashboard, unlimited memory, and tracing features.
-
-To access the platform, you have to create a Sentry account and ask for the respective credentials to be added to the logger project.
-
-Logs are stored in Sentry for a period of two years. After two years, logs are moved to local storage.
-
-Sentry's website displays statistics for logged events. The main dashboard shows the most frequent and recent log types.
-
-Selecting a specific log type provides detailed information: Log dates and frequency statistics, error traces and circumstances, and additional context data as given in the logger.
-
+Unlike the exceptions, the logs do not return any value.
 
 ### 4.14 Security
 Auth0
