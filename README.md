@@ -467,7 +467,9 @@ src/config/auth0.js
 The project uses ESLint as the linting tool. It includes predefined rules and conventions for code quality. The linter is not active by default and must be executed manually in the command line. Files can be found in the [linterConfig folder](src/linterConfig).
 #### Configuration:
 Once the dependencies are installed, an eslint.config.mjs file will be created automatically in your project folder. 
+
 ![linterDetails](img/LinterDetails.png)
+
 To configure the linter tool, copy and paste the contents of the [linter-rules.mjs](src/linterConfig/linter-rules.mjs) file into the described eslint.config.mjs file. Notice that the linter-rules file in the linterConfig folder has no functionality. The project works solely with eslint.config.mjs. 
 
 The configuration includes ESLint's recommended rule package. The complete list of available rules can be found in this manual: https://eslint.org/docs/latest/rules
