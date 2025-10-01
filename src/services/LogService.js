@@ -1,5 +1,7 @@
 import APITemplate from './APITemplate.js';
 import * as Sentry from '@sentry/react';
+import logger from '../logging/Logger';
+import { LogLevel } from '../logging/LogLevel';  
 
 class LogService extends APITemplate {
 
@@ -11,6 +13,7 @@ class LogService extends APITemplate {
 
   // Services extended ftom APITemplate should implement their own initialize method
   initialize() {
+    logger.log('console', LogLevel.INFO, {message: 'LogService initialized successfully'})
     Sentry.init({
     dsn: this.baseUrl
     });
