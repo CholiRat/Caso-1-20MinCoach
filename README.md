@@ -464,26 +464,47 @@ src/config/auth0.js
 
 
 ### 4.15 Linter configuration
-The project uses ESLint as the linting tool. It includes predefined rules and conventions for code quality. The linter is not active by default and must be executed manually in the command line.
+The project uses ESLint as the linting tool. It includes predefined rules and conventions for code quality. The linter is not active by default and must be executed manually in the command line. Files can be found in the [linterConfig folder](src/linterConfig).
+#### Configuration:
+Once the dependencies are installed, an eslint.config.mjs file will be created automatically in your project folder. 
+![linterDetails](img/LinterDetails.png)
+To configure the linter tool, copy and paste the contents of the [linter-rules.mjs](src/linterConfig/linter-rules.mjs) file into the described eslint.config.mjs file. Notice that the linter-rules file in the linterConfig folder has no functionality. The project works solely with eslint.config.mjs. 
 
-#### Implementation:
-If the project is missing the eslint-plugin-react, run this command on the bash:
-```sh
-npm install eslint-plugin-react --save-dev
+The configuration includes ESLint's recommended rule package. The complete list of available rules can be found in this manual: https://eslint.org/docs/latest/rules
+
+Add new rules inside the eslint.config.mjs by writing their name and customizing its parameters. Follow the structure of the block:
+```js
+export default defineConfig([
+  {
+    files: ["**/*.{js,mjs,cjs,jsx}"],
+  plugins: { js, "no-spanish-symbols": { rules: { "no-spanish-symbols": noSpanishSymbols } } }, // INSERT PLUGINS FOR CUSTOM RULES
+    extends: ["js/recommended"],
+    languageOptions: { globals: globals.node },
+    rules: {
+      camelcase: ["warn", { ignoreImports: true }],
+      "no-unused-expressions": ["error"],
+      "no-spanish-symbols/no-spanish-symbols": ["error"]
+       // ADD NEW RULES HERE
+      // --->
+    }
+  },
+  pluginReact.configs.flat.recommended              // RECOMMENDED RULES FOR ESLINT
+]);
 ```
-
-#### How to use:
+#### How to use the linter tool
 Run the linter on JavaScript files and React files using the command:
 ```sh
-npm run lint [filename.js]
+npm run lint [filename]
 ```
 It will show every rule violated that the project files contain.
-
 All code must be examined through the linter tool to assure its quality. Both errors and warnings must be addressed to maintain code format and functionality.
-#### Configuration:
-Rules are defined in the eslint.config.mjs file. The configuration includes ESLint's recommended rule package. The complete list of available rules can be found in the [ESLint Rules Documentation](https://eslint.org/docs/latest/rules)
 
-Custom rules can be implemented to enforce specific coding styles. The current iteration includes the no-spanish-symbols rule, which prohibits the use of the character "ñ" in variable names.
+#### Custom rules
+
+Custom rules can be implemented to enforce specific coding styles. The current iteration includes the [no-spanish-symbols rule]( src/linterConfig/no-spanish-symbols.js), which prohibits the use of the character "ñ" in variable names.
+
+A detailed guide on how to create custom rules can be found in the ESLint documentation: https://eslint.org/docs/latest/extend/custom-rules
+
 
 ### 4.16 Build and deployment pipeline
 
