@@ -255,7 +255,7 @@ Card-based design for organizing content
 Every error the system throws must be managed from the exception handling layer.
 
 In order to log errors in the program, use the ExceptionHandler.js Singleton given in the [exceptionHandling folder]( src/exceptionHandling). 
-
+#### Imports:
 For standard javascript code, only [ExceptionHandler.js](src/exceptionHandling) should be exported. 
 ```js
 import exceptionHandler from '../exceptionHandling/exceptionHandler';
@@ -264,9 +264,8 @@ For React components, import the [useExceptionHandler.js](src/hooks/useException
 ```js
 import { useExceptionHandler } from '../hooks/useExceptionHandler.js';
 ```
-
-Next, examples are given on where to use the exceptionHandler in the validations layer to recover userMessages or throwing errors in a React component.
-A validator using the exception handler must do the same as the following:
+#### Validator example:
+A validator using the exception handler must do the same as the following.
 ```js
 import { z } from 'zod';
 import exceptionHandler from '../exceptionHandling/exceptionHandler'; // IMPORT THE CLASS
@@ -312,6 +311,7 @@ export class CommonUserValidator extends IValidator {
 
 export default CommonUserValidator;
 ```
+#### React component example:
 A React component that uses the exceptionHandler follows a similar pattern, the main difference is the import being the hook useExceptionHandler.js found in the [hooks folder]( src/hooks):
 ```js
 import { useExceptionHandler } from '../hooks/useExceptionHandler.js';   // IMPORT THE HOOK
@@ -335,6 +335,7 @@ return (
   );
 }
 ```
+#### Exception Catalog:
 The handler uses a manual called the [ExceptionCatalog.js]( src/exceptionHandling/ExceptionCatalog.js), which is a dictionary that maps error codes to their corresponding information.
 An entry of the exception catalog may look like this:
 ```js
