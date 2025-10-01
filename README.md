@@ -251,62 +251,110 @@ Card-based design for organizing content
 ### 4.11 Utilities
 
 ### 4.12 Exception Handling
-This layer centralizes all error management for the system. Its primary function is to process error codes and generate consistent user messages and log entries.
 
-It will receive most of its requests from the validators layer, and send petitions to the Logger in order to save error logs.
+Every error the system throws must be managed from the exception handling layer.
 
-The layer consists of a single object, the ExceptionHandler class. It is implemented as a Singleton.
+In order to log errors in the program, use the ExceptionHandler.js Singleton given in the [exceptionHandling folder]( src/exceptionHandling). 
 
-#### Error Catalog:
-
-The handler uses a manual called the ExceptionCatalog.js, which is a dictionary that maps error codes to their corresponding information.
-
-An entry of the exception catalog may look like this:
-
-```js
-'ERRORCODE_001': {
-    level: 'WARN', // Obligatory
-    message: 'Validation failed', // Obligatory
-    userMessage: 'Please verify the provided data.', // Obligatory
-    // … Additional optional values
-}
-```
-- Levels categorize the severity of an exception. Errors are classified in one of these three:
-  - WARN: Used for non-critical issues that don't interrupt the flow of execution (e.g., user input validation errors).
-  - ERROR: For failures that affect functionality and imply a greater risk (e.g., failed API calls).
-  - FATAL: For critical failures that compromise the system's integrity or availability.
-- The message is what will be recorded as the title of the exception in the logs.
-- The userMessage is the response in natural language that the program communicates to the user.
-- Additional values may be included depending on what the validator needs to handle the error.
-
-If an error code that does not exist gets sent to the exception handler, the message will be default to code UNKNOWN-001. This is a fallback message for errors in general.
-
-The obligatory fields must always be filled in. Forgetting to include them might lead to unexpected effects in the log entries and user feedback.
-
-You may expand the catalog through the development process. Divide the sections of the catalog per domain.
-
-#### Implementation:
-To implement, only the ExceptionHandler.js should be exported. Since it is a Singleton object, it is already initialized.
-
-For standard code (inside a folder):
+For standard javascript code, only [ExceptionHandler.js](src/exceptionHandling) should be exported. 
 ```js
 import exceptionHandler from '../exceptionHandling/exceptionHandler';
 ```
-For React components, import the hook:
+For React components, import the [useExceptionHandler.js](src/hooks/useExceptionHandler.js) hook:
 ```js
-import { useExceptionHandler } from '../exceptionHandling/useExceptionHandler.js';
+import { useExceptionHandler } from '../hooks/useExceptionHandler.js';
 ```
-#### How to use:
 
-A typical call to the exception handler may look like this:
+Next, examples are given on where to use the exceptionHandler in the validations layer to recover userMessages or throwing errors in a React component.
+A validator using the exception handler must do the same as the following:
 ```js
-try {
-  throw new Error('Test error');
-} catch (error) {
-  let response = exceptionHandler.handleException('ERRORCODE_001');
+import { z } from 'zod';
+import exceptionHandler from '../exceptionHandling/exceptionHandler'; // IMPORT THE CLASS
+
+export class CommonUserValidator extends IValidator {
+  createValidator() {
+    return z.object({
+      firstName: z.string().min(1, { message: "USER-001" }), // SPECIFY POSSIBLE EXCEPTIONS PER FIELD WHEN USING ZOD
+      lastName: z.string().min(1, { message: "USER-002" }),
+      avatarUrl: z.string().url({ message: "USER-003" }).optional().or(z.literal('')), 
+      contacts: z.array(UserContactSchema).default([]), 
+      totalSessions: z.number().int().nonnegative({ message: "USER-004" }).default(0), 
+      availableSessions: z.number().int().min(0, { message: "USER-005" })
+    });
+  }
+
+  validate(data) {
+    try {
+      const validator = this.createValidator();
+      const validatedData = validator.parse(data);
+      return {
+        success: true,
+        data: validatedData
+      };
+    } catch (error) {          // CATCH ANY ERROR TYPE
+      if (error instanceof z.ZodError) {
+        // PICK THE FIRST ERROR WHEN WORKING WITH ZOD
+        const firstError = error.errors[0];
+        const errorCode = firstError.message;
+        // USE EXCEPTION HANDLER TO GET A MORE STRUCTURED RESPONSE
+        const errorResponse = exceptionHandler.handleException(errorCode);
+        
+        return {
+          success: false,
+          error: errorResponse
+        };
+      }
+      
+      throw error; // Safety net for unexpected errors
+    }
+  }
+}
+
+export default CommonUserValidator;
+```
+A React component that uses the exceptionHandler follows a similar pattern, the main difference is the import being the hook useExceptionHandler.js found in the [hooks folder]( src/hooks):
+```js
+import { useExceptionHandler } from '../hooks/useExceptionHandler.js';   // IMPORT THE HOOK
+
+function DemoLogs() {
+  const exceptionHandler = useExceptionHandler('DemoLogs');         // CREATE A HOOK INSTANCE
+
+  const onSubmit = (formData) => { 
+    const result = userValidator.validate(formData);
+    if (!result.success) {          // CATCH ANY ERROR PRODUCED
+// USE EXCEPTION HANDLER TO GET A MORE STRUCTURED RESPONSE
+      setError(result.error.userMessage); // Show to user
+    }
+  };
+
+return (
+    <form onSubmit={onSubmit}>
+      {error && <div className="error">{error}</div>}
+      {/* form fields */}
+    </form>
+  );
 }
 ```
-The handleException method is called with an error code as a string. It returns an object containing the userMessage and any other additional data. The validator or class that makes use of the exception handler must know what to do with the recieved message.
+The handler uses a manual called the [ExceptionCatalog.js]( src/exceptionHandling/ExceptionCatalog.js), which is a dictionary that maps error codes to their corresponding information.
+An entry of the exception catalog may look like this:
+```js
+['VALIDATION_001', {
+    level: 'WARN',
+    message: 'Validation failed for user input',
+    userMessage: 'Please verify the provided data.',
+  }],
+  ['VALIDATION_002', {
+    level: 'WARN',
+    message: 'Invalid email format provided',
+    userMessage: 'The email is not valid.',
+  }],
+// … Other entries
+```
+
+If an error code that does not exist gets sent to the exception handler, the message will be default to code UNKNOWN-001. This is a fallback message for errors in general.
+
+You may expand the catalog through the development process. Following the template. Divide the sections of the catalog per domain.
+
 
 ### 4.13 Logging
 This layer records actions performed by users, services, and the system. It can receive requests from any layer of the program.
