@@ -175,7 +175,7 @@ You are all set to start the implementation of 20minCoach.
 
 ### 4.2 Controllers
 
-Controllers act as intermediaries between the view (React components) and the data model. They are responsible for handling UI business logic, processing user input, and updating the application's state. The communication flow between layers is as follows:
+[Controllers](src/controllers) act as intermediaries between the view (React components) and the data model. They are responsible for handling UI business logic, processing user input, and updating the application's state. The communication flow between layers is as follows:
 
 View → Controllers → Validators → Model
 
@@ -261,7 +261,7 @@ class LoginController extends FormController<LoginFormFields> {
 ```
 
 ### 4.3 Model
-The model represents the application's data structure. It defines the classes and types that encapsulate data and related business logic.
+[The model](src/models) represents the application's data structure. It defines the classes and types that encapsulate data and related business logic.
 The main model classes are:
 
 - User: An abstract base class for all user types.
