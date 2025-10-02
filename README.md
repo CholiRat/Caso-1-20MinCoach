@@ -1175,5 +1175,7 @@ And they said it was easy to find him.
 
 ![Test18](img/test18.jpg)
 
+## 7. Diagram
 
+[Video Evidence Maze](https://estudianteccr-my.sharepoint.com/:f:/g/personal/a_baldi_1_estudiantec_cr/EvSe5-FlmqdPmAWl1TZNfBMBlxQfaI2J1QzpKotkWbEYTg?e=c8eyTf)
 
