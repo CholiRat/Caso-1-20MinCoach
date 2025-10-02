@@ -4,7 +4,7 @@
 
 ### Students
 - Alexander Brenes Garita - 2018191805
-- Andres Baldi Mora - 2024088934
+- Andrés Baldi Mora - 2024088934
 - Lindsay Nahome Marín Sánchez - 2024163904
 
 ### Course
@@ -407,6 +407,53 @@ Card-based design for organizing content
 ![Cards](img/Cards.jpg)
 
 ### 4.11 Utilities
+
+The utilities layer provides reusable helper functions and classes across the application, promoting code reuse and maintainability. It is located in the [Utilities Folder](src/utilities).
+
+Utility Modules:
+ConfigUtils.js: Manages environment variables and application configuration. It uses the Singleton pattern to ensure a single instance.
+
+dateUtils.js: Offers functions for formatting and manipulating dates.
+
+An example is ConfigUtils.js, which loads configuration from environment variables:
+
+```js
+import { LogLevel } from '../logging/LogLevel';
+
+class Utilities {
+    static instance = null;
+    config = {};
+
+    constructor() {
+        if (Utilities.instance) {
+            return Utilities.instance;
+        }
+        this.loadEnvironmentVariables();
+        this.validateConfiguration();
+        Utilities.instance = this;
+    }
+
+    static getInstance() {
+        if (this.instance === null) {
+            this.instance = new Utilities();
+        }
+        return this.instance;
+    }
+
+    loadEnvironmentVariables() {
+        this.config = {
+            API_URL: import.meta.env.VITE_API_URL,
+            LANGUAGES: [], 
+            AUTH_PROVIDER: import.meta.env.VITE_AUTH_PROVIDER,
+            ENVIRONMENT: import.meta.env.VITE_ENVIRONMENT,
+            LOG_LEVEL: LogLevel[import.meta.env.VITE_LOG_LEVEL] || LogLevel.INFO,
+            SESSION_TIMEOUT: parseInt(import.meta.env.VITE_SESSION_TIMEOUT, 10) || 900
+        };
+    }
+}
+
+export default Utilities.getInstance();
+```
 
 ### 4.12 Exception Handling
 
