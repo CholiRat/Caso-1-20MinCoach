@@ -723,6 +723,108 @@ Link:
 [Diagrama De Clases](https://lucid.app/lucidchart/9f020ccb-4b82-433d-ac55-5505b58ee891/edit?beaconFlowId=BB83C63995B61803&invitationId=inv_33809063-0bdc-4f47-9466-e854b073f8f9&page=0_0#)
 
 
+## 6. Page tests
+
+To conduct remote usability tests and collect metrics such as heat maps, click-through rates, and user feedback, we use `Maze`.
+
+**Link for testing:**[Test with maze](https://t.maze.co/449869769)
+
+Five people were asked to test the app and give us some feedback on the project.
+
+**Link to the video of the people who conducted the tests:** [Video](https://estudianteccr-my.sharepoint.com/:f:/g/personal/a_baldi_1_estudiantec_cr/EvSe5-FlmqdPmAWl1TZNfBMBlxQfaI2J1QzpKotkWbEYTg?e=c8eyTf)
+
+They were asked a basic question, which was:
+
+- Do you like the idea of having a website where you can hire a mentor for 20 minutes to explain any topic to you?
+
+And 100% of them liked the idea.
+
+![Test1](img/test1.jpg)
+
+- Then we asked them to visit the app's home page, review it, and give feedback on it.
+
+If we review the people, they spent an average of 15 seconds reviewing the entire app.
+
+![Test2](img/test2.jpg)
+
+Looking at the heat map, the test subjects noticed the buttons, but they never touched the price buttons.
+
+![Test3](img/test3.jpg)
+
+He was asked the following question:
+
+- Describe what you thought of the home page and whether you think it is appropriate for a mentoring website.
+
+We received 80% positive comments, with only one person giving a negative comment.
+
+![Test4](img/test4.jpg)
+
+And people really like the design of the page.
+
+![Test5](img/test5.jpg)
+
+The next test was:
+
+- Can you easily find where the Search Coach page is?
+
+And reviewing the answers, out of the 5 people, only 4 found it, and it took them 3 seconds to find it.
+
+![Test6](img/test6.jpg)
+
+And we had 83% of people who found the page easy to find. 
+
+![Test7](img/test7.jpg)
+
+After finding the “Find a Coach” page, we told them:
+
+- Browse the page and click on whatever interests you most.
+
+And these were the results.
+
+![Test8](img/test8.jpg)
+
+Everyone went to look for the “Connect” button, which is pretty good because it's easy to connect people with a coach.
+Also, 100% of people left us positive comments.
+
+![Test9](img/test9.jpg)
+
+Similarly, people rated the coach search page as good/understandable.
+
+![Test10](img/test10.jpg)
+
+Then he asked himself the same question of searching for “Coach Profile” from the home page, and it became easier for him with a fairly quick response in finding the page.
+
+![Test11](img/test11.jpg)
+
+![Test12](img/test12.jpg)
+
+And once again, we asked them to browse the “Coach Profile” page, and these were the results
+
+![Test13](img/test13.jpg)
+
+Everyone was interested and clicked on the “Connect Now” button.
+
+And these were the comments they left on the Perfil page
+
+![Test14](img/test14.jpg)
+
+![Test15](img/test15.jpg)
+
+And as a final question, they were asked:
+
+- If you can find the prices
+
+And this was the result of the heat map and their responses.
+
+![Test16](img/test16.jpg)
+
+It took them approximately 10 seconds to find it.
+
+![Test17](img/test17.jpg)
+
+And they said it was easy to find him.
+
+![Test18](img/test18.jpg)
 
 
 
