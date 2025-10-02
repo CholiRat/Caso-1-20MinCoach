@@ -175,14 +175,147 @@ You are all set to start the implementation of 20minCoach.
 
 ### 4.2 Controllers
 
-### 4.3 Model
-Main classes included in the system:
+Controllers act as intermediaries between the view (React components) and the data model. They are responsible for handling UI business logic, processing user input, and updating the application's state. The communication flow between layers is as follows:
 
-- User.
-- Coach.
-- Subscription.
-- Session.
-- Review.
+View → Controllers → Validators → Model
+
+Controller Structure
+To ensure consistency, all form controllers extend from an abstract base class, FormController. This class provides common functionality for managing form state, validation, and submission.
+
+```js
+interface IFormState<T> {
+    fields: T;
+    isSubmitting: boolean;
+    error: string | null;
+}
+
+abstract class FormController<T> {
+    protected updateStateCallback: (newState: IFormState<T>) => void;
+    protected initialState: T;
+
+    constructor(initialState: T, updateStateCallback: (newState: IFormState<T>) => void) {
+        this.initialState = initialState;
+        this.updateStateCallback = updateStateCallback;
+    }
+
+    public resetForm(): void {
+        this.updateStateCallback({
+            fields: this.initialState,
+            isSubmitting: false,
+            error: null,
+        });
+    }
+
+    public setFormField(currentState: IFormState<T>, field: keyof T, value: any): void {
+        this.updateStateCallback({
+            ...currentState,
+            fields: {
+                ...currentState.fields,
+                [field]: value,
+            },
+        });
+    }
+
+    public abstract onSubmit(fields: T): Promise<void>;
+}
+
+export default FormController;
+
+```
+
+A specific implementation, such as the LoginController, handles the login logic within the onSubmit method:
+
+```js
+import FormController from './FormController';
+
+interface LoginFormFields {
+    email: string;
+    password: string;
+}
+
+class LoginController extends FormController<LoginFormFields> {
+    
+    public async onSubmit(fields: LoginFormFields): Promise<void> {
+        this.updateStateCallback({ fields, isSubmitting: true, error: null });
+
+        try {
+            if (!fields.email || !fields.password) {
+                throw new Error("Email and password are required.");
+            }
+            if (!/^\S+@\S+\.\S+$/.test(fields.email)) {
+                throw new Error("Invalid email format.");
+            }
+
+            console.log("Logging in with:", fields.email);
+            // await authService.login(fields.email, fields.password);
+            
+            await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+            this.updateStateCallback({ fields, isSubmitting: false, error: null });
+            
+        } catch (error: any) {
+            this.updateStateCallback({ fields, isSubmitting: false, error: error.message });
+        }
+    }
+}
+```
+
+### 4.3 Model
+The model represents the application's data structure. It defines the classes and types that encapsulate data and related business logic.
+The main model classes are:
+
+User: An abstract base class for all user types.
+
+CommonUser: Represents a standard user seeking coaching.
+
+CoachUser: Represents a professional coach and inherits from User.
+
+Session: Represents a coaching session.
+
+Review: Represents a session review, built using the Builder pattern.
+
+Subscription: Represents a user's subscription plan.
+
+Here is an example of a model class, CoachUser, which extends User with coach-specific properties:
+
+```js
+import User from './User';
+import Review from './Review';
+
+class CoachUser extends User {
+    public backgroundDesc: string;
+    public specialties: string[];
+    public tags: string[];
+    public portfolioImagesURL: string[];
+    public reviews: Review[];
+    public isAvailable: boolean;
+
+    constructor(data: {
+        firstName: string;
+        lastName: string;
+        avatarURL: string;
+        backgroundDesc: string;
+        specialties: string[];
+        isAvailable: boolean;
+        tags?: string[];
+        portfolioImagesURL?: string[];
+        reviews?: Review[];
+    }) {
+        super(data);
+        this.backgroundDesc = data.backgroundDesc;
+        this.specialties = data.specialties;
+        this.isAvailable = data.isAvailable;
+        this.tags = data.tags || [];
+        this.portfolioImagesURL = data.portfolioImagesURL || [];
+        this.reviews = data.reviews || [];
+    }
+
+    // ... Getters and Setters that can be find in the full source file
+}
+
+export default CoachUser;
+
+```
 
 ### 4.4 Middleware
 
