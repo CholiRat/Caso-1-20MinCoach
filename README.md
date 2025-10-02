@@ -174,6 +174,65 @@ Sentry will register logs on the web app and save them for a 2-year period. Its 
 ### 4.7 Background jobs
 
 ### 4.8 Validators
+For validators, the selected library is zod. Use this library for every validation within the data provided by the user. Also, to throw errors, use the exceptionHandler.js and create structured messages for user feedback.
+
+Inside the [validators folder] you can find the common interface IValidator and an example validator to verify CommonUser data.
+
+Communication between layers goes as follows:
+View → Controllers→ Validators → Model
+                               → Exception Handling
+                               
+#### Validator structure
+A validator will follow the structure detailed below:
+```js
+import { z } from 'zod';	// IMPORT ZOD LIBRARY
+import exceptionHandler from '../exceptionHandling/exceptionHandler';	// ALWAYS USE EXCEPTION HANDLER TO  GET ERROR MESSAGES
+
+export class CommonUserValidator extends IValidator {
+  createValidator() {
+    return z.object({	// CREATE Z OBJECT
+     // BROWSE EXCEPTION CATALOG AND RETURN THE CORRESPONDING ERRORCODE
+      firstName: z.string().min(1, { message: "USER-001" }),
+      lastName: z.string().min(1, { message: "USER-002" }),
+      avatarUrl: z.string().url({ message: "USER-003" }).optional().or(z.literal('')), 
+      contacts: z.array(UserContactSchema).default([]), 
+      totalSessions: z.number().int().nonnegative({ message: "USER-004" }).default(0), 
+      availableSessions: z.number().int().min(0, { message: "USER-005" })
+    });
+  }
+
+// STRUCTURE A RESPONSE WITH OBJECT DATA IF IT IS SUCCESFUL, AND AN ERRORRESPONSE IF IT FAILS
+  validate(data) {
+    try {
+      const validator = this.createValidator();            // EXECUTE CREATE VALIDATOR METHOD FIRST
+      const validatedData = validator.parse(data);
+      return {
+        success: true,
+        data: validatedData
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Pick up the first error code
+        const firstError = error.errors[0];
+        const errorCode = firstError.message;
+        // Use the exception handler to get a structured error response
+        const errorResponse = exceptionHandler.handleException(errorCode);
+        
+        return {
+          success: false,
+          error: errorResponse
+        };
+      }
+      exceptionHandler.handleException('UNKNOWN-001');
+    }
+  }
+}
+
+export default CommonUserValidator;
+```
+Make sure to include createValidator() and validate(data) in all validators classes. 
+
+Find more information about validations with ZOD in ![the official ZOD documentation](https://zod.dev)
 
 ### 4.9 State management
 The web app state will be controlled by the Singleton class [WebState.js]( stateManagement/WebState.js). Each time its state gets modified, it will notify all [IWebStateListener objects]( src/stateManagement/IWebStateListener.js).
