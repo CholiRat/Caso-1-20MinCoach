@@ -220,6 +220,72 @@ A plan has been developed to expand the API catalog. Check the next table to lea
 | LogService.js            | Sentry logging               |
 
 ### 4.7 Background jobs
+This layer contains two types of background processes: Background jobs and Listeners. Check the [background folder]( src/background) to find all the templates and examples.
+
+- Real time updates contain the keyword “[Object] + Listener”
+- Background jobs contain the keyword “Refresh + [Object]”
+#### Usage of invoker
+Background jobs are called by objects [BackgroundJobsInvoker.js]( src/background/BackgroundJobsInvoker.js). They can implement one command which is equivalent to a concrete implementation of a background job.
+```js
+const jobInvoker = new BackgroundJobsInvoker();
+jobInvoker.setCommand(new RefreshAvailableCoachesCommand());
+jobInvoker.setInterval(30); // 30 seconds
+jobInvoker.start();
+```
+#### Background jobs command structure
+Use the following example from [RefreshAvailableCoaches.js]( src/background/RefreshAvailableCoaches.js) to build other background jobs. 
+```js
+import { IBackgroundJobCommand } from './IBackgroundJobCommand.js'; 
+import webState from '../stateManagement/WebState.js';		// USE WEBSTATE TO REFRESH DATA
+import BackgroundJobsService from '../services/BackgroundJobsService.js';
+
+export class RefreshAvailableCoachesCommand extends IBackgroundJobCommand {	// INHERIT FROM INTERFACE
+  async execute() {
+
+    // Fetch data from API
+
+    BackgroundJobsService.obtainData(availableCoaches);	// GET DATA FOR UPDATE
+
+    // Update WebState
+    webState.setAvailableCoaches(availableCoaches);		// REFRESH THE DATA BY MODYFIING THE WEBSTATE
+    webState.notify();		// ALWAYS NOTIFY AFTER CHANGING A VALUE FROM THE WEBSTATE
+      }
+}
+
+export default RefreshAvailableCoachesCommand;
+```
+#### Real time listeners structure
+To implement real time listeners, you should follow the example below based on the file [SessionStatusListener.js]( src/background/SessionStatusListener.js)
+```js
+import { webState } from '../stateManagement/WebState.js';             
+import IRealTimeListener from './IRealTimeListener';
+import logger from '../logging/Logger';
+import { LogLevel } from '../logging/LogLevel';
+
+class SessionStatusListener extends IRealTimeListener {
+  constructor() {
+    super();
+  }
+
+  update() {
+    // Obtain sessionDetails with WebSocket/API 
+    const sessionData = null; // Placeholder for actual data fetching logic
+
+    if (sessionData) {
+      webState.setActiveSession(sessionData);     // REFRESH ACTIVE SESSION
+      webState.notify();                     // ALWAYS NOTIFY AFTER CHANGING A VALUE FROM THE WEBSTATE
+      
+      logger.log('console', LogLevel.INFO, {
+        message: 'Session status updated from real-time source'});
+    }
+  }
+}
+
+const sessionStatusListener = new SessionStatusListener();
+export default sessionStatusListener;
+```
+Background jobs start when specified in the code, listeners start working as soon as they get instantiated. For consistency, both background processes should start inside the main.tsx class.
+
 
 ### 4.8 Validators
 For validators, the selected library is zod. Use this library for every validation within the data provided by the user. Also, to throw errors, use the exceptionHandler.js and create structured messages for user feedback.
@@ -324,7 +390,6 @@ class SessionListener extends IWebStateListener {
 const sessionListener = new SessionListener();
 export default sessionListener;
 ```
-#### Notification structure:
 All state changes must be made through setters and send a notification to subscribers via notify()
 
 
