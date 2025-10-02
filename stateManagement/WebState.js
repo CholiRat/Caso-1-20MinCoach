@@ -18,6 +18,7 @@ class WebState {
             return WebState.instance;
         }
         WebState.instance = this;
+        this.subscribers = [];
     }
 
     static getInstance() {
@@ -91,5 +92,5 @@ class WebState {
     }
 
 }
-
-export default WebState;
+// Create a singleton instance
+export const webState = new WebState();
