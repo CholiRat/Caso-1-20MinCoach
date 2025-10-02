@@ -4,7 +4,7 @@
 
 ### Students
 - Alexander Brenes Garita - 2018191805
-- Andres Baldi Mora
+- Andrés Baldi Mora - 2024088934
 - Lindsay Nahome Marín Sánchez - 2024163904
 
 ### Course
@@ -20,6 +20,108 @@ September 27, 2025
 This repository includes a collection of proof of concepts. It serves as a guide for building the designated software. There are some code samples in the /src. folder, and diagrams in the /diagrams folder. Make use of this document to see a more exhaustive specification of the project.
 
 This document details the architecture for the coaching platform 20minCoach. A system that allows connection with professionals from a variety of areas on short video sessions. The document describes necessary aspects for the correct implementation of the software. Among these are the decisions that back up the design, instructions and explanations for the proof of concepts, descriptions for all the modules, and other relevant information according to the section.
+
+### Project Structure:
+
+```bash
+Caso-1-20MinCoach/
+├── diagrams/
+├── img/
+├── src/
+│   ├── background/
+│   │   ├── BackgroundJobsInvoker.js
+│   │   ├── IBackgroundJobCommand.js
+│   │   ├── IRealTimeListener.js
+│   │   ├── RefreshAvailableCoaches.js
+│   │   └── SessionStatusListener.js
+│   ├── business/
+│   │   ├── CoachUserPolicy.js
+│   │   ├── CommonUserPolicy.js
+│   │   ├── NotificationPolicy.js
+│   │   ├── PaymentPolicy.js
+│   │   ├── ReviewPolicy.js
+│   │   ├── SessionPolicy.js
+│   │   └── SubscriptionPolicy.js
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── Features.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Header.tsx
+│   │   ├── Hero.tsx
+│   │   └── Pricing.tsx
+│   ├── controllers/
+│   │   ├── CoachController.ts
+│   │   ├── FormController.ts
+│   │   ├── LoginController.ts
+│   │   ├── MainPageController.ts
+│   │   ├── ReviewFormController.ts
+│   │   └── UserFormController.ts
+│   ├── exceptionHandling/
+│   │   ├── ExceptionCatalog.js
+│   │   └── ExceptionHandler.js
+│   ├── hooks/
+│   │   ├── use-mobile.tsx
+│   │   ├── use-toast.ts
+│   │   ├── useExceptionHandler.js
+│   │   └── useLogger.js
+│   ├── lib/
+│   │   └── utils.ts
+│   ├── linterConfig/
+│   │   ├── demo-linter.js
+│   │   ├── linter-rules.mjs
+│   │   └── no-spanish-symbols.js
+│   ├── logging/
+│   │   ├── ConsoleLogger.js
+│   │   ├── ILogStrategy.js
+│   │   ├── LogLevel.js
+│   │   ├── Logger.js
+│   │   └── SentryLogger.js
+│   ├── middleware/
+│   │   ├── ErrorHandlingMiddleware.ts
+│   │   ├── InterceptorMiddleware.ts
+│   │   ├── LoggingMiddleware.ts
+│   │   ├── MiddlewareApiClient.ts
+│   │   ├── MiddlewareBaseHandler.ts
+│   │   ├── MiddlewareHandler.ts
+│   │   └── PermissionsMiddleware.ts
+│   ├── models/
+│   │   ├── CoachUser.ts
+│   │   ├── CommonUser.ts
+│   │   ├── Enumerations.ts
+│   │   ├── IReviewBuilder.ts
+│   │   ├── RequestedSession.ts
+│   │   ├── Review.ts
+│   │   ├── ReviewBuilder.ts
+│   │   ├── Session.ts
+│   │   ├── Subscription.ts
+│   │   ├── User.ts
+│   │   └── UserContact.ts
+│   ├── pages/
+│   │   ├── CoachProfile.tsx
+│   │   ├── Index.tsx
+│   │   ├── NotFound.tsx
+│   │   └── SearchCoach.tsx
+│   ├── services/
+│   │   ├── APITemplate.js
+│   │   └── LogService.js
+│   ├── stateManagement/
+│   │   ├── CurrentSessionListener.js
+│   │   ├── IWebStateListener.js
+│   │   └── WebState.js
+│   ├── utilities/
+│   │   ├── ConfigUtils.js
+│   │   ├── Utilities.js
+│   │   └── dateUtils.js
+│   ├── validators/
+│   │   ├── CommonUserValidator.js
+│   │   └── IValidator.js
+│   ├── App.css
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
+└── README.md
+```
 
 ## 2. Scope
 This iteration of the project contemplates the base functionalities for 20minCoach. A list of characteristics for the initial version of the design has been made:
@@ -59,6 +161,9 @@ npm run dev
 5.	Additionally, install these commonly required packages locally if absent:
 ```sh
 npm install --save-dev eslint vite @vitejs/plugin-react eslint-plugin-react eslint-plugin-react-hooks
+
+npm install axios
+
 ```
 
 You are all set to start the implementation of 20minCoach.
@@ -70,14 +175,147 @@ You are all set to start the implementation of 20minCoach.
 
 ### 4.2 Controllers
 
-### 4.3 Model
-Main classes included in the system:
+Controllers act as intermediaries between the view (React components) and the data model. They are responsible for handling UI business logic, processing user input, and updating the application's state. The communication flow between layers is as follows:
 
-- User.
-- Coach.
-- Subscription.
-- Session.
-- Review.
+View → Controllers → Validators → Model
+
+Controller Structure
+To ensure consistency, all form controllers extend from an abstract base class, FormController. This class provides common functionality for managing form state, validation, and submission.
+
+```js
+interface IFormState<T> {
+    fields: T;
+    isSubmitting: boolean;
+    error: string | null;
+}
+
+abstract class FormController<T> {
+    protected updateStateCallback: (newState: IFormState<T>) => void;
+    protected initialState: T;
+
+    constructor(initialState: T, updateStateCallback: (newState: IFormState<T>) => void) {
+        this.initialState = initialState;
+        this.updateStateCallback = updateStateCallback;
+    }
+
+    public resetForm(): void {
+        this.updateStateCallback({
+            fields: this.initialState,
+            isSubmitting: false,
+            error: null,
+        });
+    }
+
+    public setFormField(currentState: IFormState<T>, field: keyof T, value: any): void {
+        this.updateStateCallback({
+            ...currentState,
+            fields: {
+                ...currentState.fields,
+                [field]: value,
+            },
+        });
+    }
+
+    public abstract onSubmit(fields: T): Promise<void>;
+}
+
+export default FormController;
+
+```
+
+A specific implementation, such as the LoginController, handles the login logic within the onSubmit method:
+
+```js
+import FormController from './FormController';
+
+interface LoginFormFields {
+    email: string;
+    password: string;
+}
+
+class LoginController extends FormController<LoginFormFields> {
+    
+    public async onSubmit(fields: LoginFormFields): Promise<void> {
+        this.updateStateCallback({ fields, isSubmitting: true, error: null });
+
+        try {
+            if (!fields.email || !fields.password) {
+                throw new Error("Email and password are required.");
+            }
+            if (!/^\S+@\S+\.\S+$/.test(fields.email)) {
+                throw new Error("Invalid email format.");
+            }
+
+            console.log("Logging in with:", fields.email);
+            // await authService.login(fields.email, fields.password);
+            
+            await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+            this.updateStateCallback({ fields, isSubmitting: false, error: null });
+            
+        } catch (error: any) {
+            this.updateStateCallback({ fields, isSubmitting: false, error: error.message });
+        }
+    }
+}
+```
+
+### 4.3 Model
+The model represents the application's data structure. It defines the classes and types that encapsulate data and related business logic.
+The main model classes are:
+
+User: An abstract base class for all user types.
+
+CommonUser: Represents a standard user seeking coaching.
+
+CoachUser: Represents a professional coach and inherits from User.
+
+Session: Represents a coaching session.
+
+Review: Represents a session review, built using the Builder pattern.
+
+Subscription: Represents a user's subscription plan.
+
+Here is an example of a model class, CoachUser, which extends User with coach-specific properties:
+
+```js
+import User from './User';
+import Review from './Review';
+
+class CoachUser extends User {
+    public backgroundDesc: string;
+    public specialties: string[];
+    public tags: string[];
+    public portfolioImagesURL: string[];
+    public reviews: Review[];
+    public isAvailable: boolean;
+
+    constructor(data: {
+        firstName: string;
+        lastName: string;
+        avatarURL: string;
+        backgroundDesc: string;
+        specialties: string[];
+        isAvailable: boolean;
+        tags?: string[];
+        portfolioImagesURL?: string[];
+        reviews?: Review[];
+    }) {
+        super(data);
+        this.backgroundDesc = data.backgroundDesc;
+        this.specialties = data.specialties;
+        this.isAvailable = data.isAvailable;
+        this.tags = data.tags || [];
+        this.portfolioImagesURL = data.portfolioImagesURL || [];
+        this.reviews = data.reviews || [];
+    }
+
+    // ... Getters and Setters that can be find in the full source file
+}
+
+export default CoachUser;
+
+```
 
 ### 4.4 Middleware
 
@@ -404,6 +642,53 @@ Card-based design for organizing content
 ![Cards](img/Cards.jpg)
 
 ### 4.11 Utilities
+
+The utilities layer provides reusable helper functions and classes across the application, promoting code reuse and maintainability. It is located in the [Utilities Folder](src/utilities).
+
+Utility Modules:
+ConfigUtils.js: Manages environment variables and application configuration. It uses the Singleton pattern to ensure a single instance.
+
+dateUtils.js: Offers functions for formatting and manipulating dates.
+
+An example is ConfigUtils.js, which loads configuration from environment variables:
+
+```js
+import { LogLevel } from '../logging/LogLevel';
+
+class Utilities {
+    static instance = null;
+    config = {};
+
+    constructor() {
+        if (Utilities.instance) {
+            return Utilities.instance;
+        }
+        this.loadEnvironmentVariables();
+        this.validateConfiguration();
+        Utilities.instance = this;
+    }
+
+    static getInstance() {
+        if (this.instance === null) {
+            this.instance = new Utilities();
+        }
+        return this.instance;
+    }
+
+    loadEnvironmentVariables() {
+        this.config = {
+            API_URL: import.meta.env.VITE_API_URL,
+            LANGUAGES: [], 
+            AUTH_PROVIDER: import.meta.env.VITE_AUTH_PROVIDER,
+            ENVIRONMENT: import.meta.env.VITE_ENVIRONMENT,
+            LOG_LEVEL: LogLevel[import.meta.env.VITE_LOG_LEVEL] || LogLevel.INFO,
+            SESSION_TIMEOUT: parseInt(import.meta.env.VITE_SESSION_TIMEOUT, 10) || 900
+        };
+    }
+}
+
+export default Utilities.getInstance();
+```
 
 ### 4.12 Exception Handling
 

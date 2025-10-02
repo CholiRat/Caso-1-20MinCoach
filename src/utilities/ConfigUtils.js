@@ -1,5 +1,4 @@
-
-import {LogLevel} from '../logging/LogLevel'
+import { LogLevel } from '../logging/LogLevel';
 
 class Utilities {
     static instance = null;
@@ -11,6 +10,7 @@ class Utilities {
         }
         this.loadEnvironmentVariables();
         this.validateConfiguration();
+        Utilities.instance = this;
     }
 
     static getInstance() {
@@ -21,14 +21,14 @@ class Utilities {
     }
 
     loadEnvironmentVariables() {
-        // mover a .env para mayor seguridad
+        // Cargar variables desde import.meta.env
         this.config = {
-            API_URL: "https://api.20mincoach.com/v1",
-            LANGUAGES: [],
-            AUTH_PROVIDER: "auth0",
-            ENVIRONMENT: "Dev", // Cambiar si es produccion o desarrollo
-            LOG_LEVEL: LogLevel,
-            SESSION_TIMEOUT: 900
+            API_URL: import.meta.env.VITE_API_URL,
+            LANGUAGES: [], 
+            AUTH_PROVIDER: import.meta.env.VITE_AUTH_PROVIDER,
+            ENVIRONMENT: import.meta.env.VITE_ENVIRONMENT,
+            LOG_LEVEL: LogLevel[import.meta.env.VITE_LOG_LEVEL] || LogLevel.INFO,
+            SESSION_TIMEOUT: parseInt(import.meta.env.VITE_SESSION_TIMEOUT, 10) || 900
         };
     }
 
@@ -44,6 +44,7 @@ class Utilities {
     getApiURL() {
         return this.config.API_URL;
     }
+    
 
     getSessionTimeout() {
         return this.config.SESSION_TIMEOUT;
@@ -64,11 +65,6 @@ class Utilities {
     getLogLevel() {
         return this.config.LOG_LEVEL;
     }
-
-    getSessionTimeout() {
-        return this.config.SESSION_TIMEOUT;
-    }
-
 }
 
 export default Utilities.getInstance();
