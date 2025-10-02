@@ -34,8 +34,7 @@ export class CommonUserValidator extends IValidator {
           error: errorResponse
         };
       }
-      
-      throw error; // Safety net for unexpected errors
+      exceptionHandler.handleException('UNKNOWN-001');
     }
   }
 }
