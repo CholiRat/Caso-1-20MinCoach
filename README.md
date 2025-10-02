@@ -458,8 +458,20 @@ We will also use it because Auth0 already has login and password recovery integr
 
 It also makes the login connection easier, because you can log in with your Google, Facebook, GitHub, or other accounts.
 
+To configure it, go to the config folder and save the configuration.
 ``` sh
 src/config/auth0.js
+```
+
+And add this code, which connects your Auth0 account to your program.
+``` js
+export const auth0Config = {
+  domain: "TU_DOMINIO.auth0.com",
+  clientId: "TU_CLIENT_ID",
+  authorizationParams: {
+    redirect_uri: window.location.origin
+  }
+};
 ```
 
 
