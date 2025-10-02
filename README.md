@@ -328,13 +328,14 @@ Middleware Structure
 Each middleware extends MiddlewareBaseHandler and can be chained together to form a processing pipeline.
 
 Implemented Middlewares:
-LoggingMiddleware: Logs request and response details.
 
-PermissionsMiddleware: Attaches authentication tokens to outgoing requests.
+- LoggingMiddleware: Logs request and response details.
 
-ErrorHandlingMiddleware: Catches and handles errors from API responses.
+- PermissionsMiddleware: Attaches authentication tokens to outgoing requests.
 
-InterceptorMiddleware: Makes the actual API call using axios.
+- ErrorHandlingMiddleware: Catches and handles errors from API responses.
+
+- InterceptorMiddleware: Makes the actual API call using axios.
 
 An example is the ErrorHandlingMiddleware, which centralizes communication error management:
 
