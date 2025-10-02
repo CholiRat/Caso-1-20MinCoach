@@ -1114,7 +1114,7 @@ Link:
 [Diagrama De Clases](https://lucid.app/lucidchart/9f020ccb-4b82-433d-ac55-5505b58ee891/edit?beaconFlowId=BB83C63995B61803&invitationId=inv_33809063-0bdc-4f47-9466-e854b073f8f9&page=0_0#)
 
 
-## 6. Page tests
+## 6. UI and UX tests
 
 To conduct remote usability tests and collect metrics such as heat maps, click-through rates, and user feedback, we use `Maze`.
 
