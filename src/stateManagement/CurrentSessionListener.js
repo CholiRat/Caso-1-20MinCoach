@@ -3,7 +3,7 @@ import IWebStateListener from '../stateManagement/IWebStateListener';
 import logger from '../logging/Logger';
 import { LogLevel } from '../logging/LogLevel';
 
-class SessionListener extends IWebStateListener {
+class CurrentSessionListener extends IWebStateListener {
   constructor() {
     super();
     webState.subscribe(this);              
@@ -13,11 +13,12 @@ class SessionListener extends IWebStateListener {
     const session = webState.getActiveSession();
     
     if (session) {
-      logger.log('console', LogLevel.INFO, {message: 'Session is currently active'})
+      logger.log('console', LogLevel.INFO, {message: 'A session is currently active'})
     } else {
-      logger.log('console', LogLevel.INFO, {message: 'Session is currently inactive'})
+      logger.log('console', LogLevel.INFO, {message: 'A session is currently inactive'})
     }
   }
 }
-const sessionListener = new SessionListener();
-export default sessionListener;
+const currentSessionListener = new CurrentSessionListener();
+export default currentSessionListener;
+
