@@ -124,12 +124,12 @@ class CommonUser {
 
   setStarterSessions() {
     const policy = new SubscriptionPolicy();			 
-    this.availableSessions = policy.getStarterSessions();		// ALWAYS RETRIEVE INFORMATION FROM THIS BUSINESS RULES
+    this.availableSessions = policy.getStarterSessions();		// ALWAYS RETRIEVE INFORMATION FROM BUSINESS RULES
   }
 
   setProSessions() {
     const policy = new SubscriptionPolicy();
-    this.availableSessions = policy.getProSessions();		// ALWAYS RETRIEVE INFORMATION FROM THIS BUSINESS RULES
+    this.availableSessions = policy.getProSessions();		// ALWAYS RETRIEVE INFORMATION FROM BUSINESS RULES
   }
 
   getAvailableSessions() {
