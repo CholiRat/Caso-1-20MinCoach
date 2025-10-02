@@ -319,9 +319,50 @@ export default CoachUser;
 
 ### 4.4 Middleware
 
-- Logs.
-- Permission validation
-- Error handling.
+The middleware layer intercepts API requests and responses to perform cross-cutting concerns such as logging, error handling, and permission validation. It is implemented using the Chain of Responsibility pattern. In the the [middleware folder](src/middleware) you can see how other layers are related, such as Logging or ErrorHandling
+
+The communication flow is as follows:
+Services → Middleware → External API
+
+Middleware Structure
+Each middleware extends MiddlewareBaseHandler and can be chained together to form a processing pipeline.
+
+Implemented Middlewares:
+LoggingMiddleware: Logs request and response details.
+
+PermissionsMiddleware: Attaches authentication tokens to outgoing requests.
+
+ErrorHandlingMiddleware: Catches and handles errors from API responses.
+
+InterceptorMiddleware: Makes the actual API call using axios.
+
+An example is the ErrorHandlingMiddleware, which centralizes communication error management:
+
+```js
+
+import { MiddlewareBaseHandler, Request, Response } from './MiddlewareBaseHandler';
+import exceptionHandler from '../exceptionHandling/exceptionHandler';
+
+export class ErrorHandlingMiddleware extends MiddlewareBaseHandler {
+    public async handle(request: Request): Promise<Response> {
+        try {
+            return await super.handle(request);
+        } catch (error: any) {
+            const status = error.response?.status;
+            if (status === 401 || status === 403) {
+                exceptionHandler.handleException('AUTH-001');
+            } else if (status >= 500) {
+                exceptionHandler.handleException('API-001');
+            } else if (!error.response) {
+                exceptionHandler.handleException('NETWORK-001');
+            } else {
+                exceptionHandler.handleException('UNKNOWN_001');
+            }
+            throw error;
+        }
+    }
+}
+```
 
 ### 4.5 Business
 The business layer enforces all the business rules that correlate to the entities inside the model layer. Inside, the [business folder](src/business), there are multiple classes that follow a nomenclature of “[domain] + Policy”.
@@ -1175,7 +1216,7 @@ And they said it was easy to find him.
 
 ![Test18](img/test18.jpg)
 
-## 7. Diagram
+## 7. Video Testing
 
 [Video Evidence Maze](https://estudianteccr-my.sharepoint.com/:f:/g/personal/a_baldi_1_estudiantec_cr/EvSe5-FlmqdPmAWl1TZNfBMBlxQfaI2J1QzpKotkWbEYTg?e=c8eyTf)
 
