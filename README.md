@@ -264,17 +264,17 @@ class LoginController extends FormController<LoginFormFields> {
 The model represents the application's data structure. It defines the classes and types that encapsulate data and related business logic.
 The main model classes are:
 
-User: An abstract base class for all user types.
+- User: An abstract base class for all user types.
 
-CommonUser: Represents a standard user seeking coaching.
+- CommonUser: Represents a standard user seeking coaching.
 
-CoachUser: Represents a professional coach and inherits from User.
+- CoachUser: Represents a professional coach and inherits from User.
 
-Session: Represents a coaching session.
+- Session: Represents a coaching session.
 
-Review: Represents a session review, built using the Builder pattern.
+- Review: Represents a session review, built using the Builder pattern.
 
-Subscription: Represents a user's subscription plan.
+- Subscription: Represents a user's subscription plan.
 
 Here is an example of a model class, CoachUser, which extends User with coach-specific properties:
 
