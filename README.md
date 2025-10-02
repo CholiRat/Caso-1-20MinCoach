@@ -189,6 +189,7 @@ import { z } from 'zod';	// IMPORT ZOD LIBRARY
 import exceptionHandler from '../exceptionHandling/exceptionHandler';	// ALWAYS USE EXCEPTION HANDLER TO  GET ERROR MESSAGES
 
 export class CommonUserValidator extends IValidator {
+  // METHOD TO CREATE THE SCHEMA FOR VALIDATIONS
   createValidator() {
     return z.object({	// CREATE Z OBJECT
      // BROWSE EXCEPTION CATALOG AND RETURN THE CORRESPONDING ERRORCODE
@@ -201,9 +202,9 @@ export class CommonUserValidator extends IValidator {
     });
   }
 
-// STRUCTURE A RESPONSE WITH OBJECT DATA IF IT IS SUCCESFUL, AND AN ERRORRESPONSE IF IT FAILS
+// STRUCTURE A RESPONSE WITH OBJECT DATA IF IT IS SUCCESFUL, OR AN ERRORRESPONSE IF IT FAILS
   validate(data) {
-    try {
+    try {                      // TRY/CATCH CLAUSE TO FIND ANY ZOD EXCEPTION
       const validator = this.createValidator();            // EXECUTE CREATE VALIDATOR METHOD FIRST
       const validatedData = validator.parse(data);
       return {
@@ -223,7 +224,7 @@ export class CommonUserValidator extends IValidator {
           error: errorResponse
         };
       }
-      exceptionHandler.handleException('UNKNOWN-001');
+      exceptionHandler.handleException('UNKNOWN-001');      // FALLBACK IF THE EXCEPTION IS NOT FROM ZOD
     }
   }
 }
