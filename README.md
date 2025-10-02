@@ -733,9 +733,6 @@ By using Tailwind CSS, the design is responsive for mobile devices and adapts to
 
 ![Responsive Mobile](img/responsiveMobile.jpg)
 
-#### Professional SaaS:
-Since the goal is to offer a specialized service to help customers, we have implemented a system called Saas, which we configure, customize, and implement on our website in order to sell our product to customers in the fastest and most efficient way possible.
-
 #### Dark/Light Mode:
 
 ##### Dark Mode
@@ -747,6 +744,8 @@ Since the goal is to offer a specialized service to help customers, we have impl
 #### Card-based Layout: 
 Card-based design for organizing content
 ![Cards](img/Cards.jpg)
+
+If you wish to use the components and designs on the page, you must log in at `/src/components/ui`
 
 ### 4.11 Utilities
 
