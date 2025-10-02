@@ -86,54 +86,69 @@ Main classes included in the system:
 - Error handling.
 
 ### 4.5 Business
-This layer enforces all the business rules for 20minCoach. Inside, there are multiple classes that follow a nomenclature of “[domain] + Policy”. There is no object design pattern since every policy class is its own catalog with methods that verify business rules are being followed.
+The business layer enforces all the business rules that correlate to the entities inside the model layer. Inside, the [business folder](src/business), there are multiple classes that follow a nomenclature of “[domain] + Policy”.
+Communication between layers goes as follows:
+Model → Business → Services
+#### Policy structure
+A business policy class may look like this one:
+```js
+class SubscriptionPolicy {
+    starterSessions = 2;
+    proSessions = 8;
 
-Business policies receive requests from the model layer, and communicate with the services layer.
+  constructor() {
 
-The system domain circles around the classes proposed for the model.
-- CommonUser
-- CoachUser
-- Session
-- Subscription
-- Review
-- Payment
-- Notification
+  }
 
-Each of these areas use policies that mirror the business rules. Here is a list of the business rules that the system will work with:
+  getStarterSessions() {
+    return this.starterSessions;
+  }
 
-##### Common User policies
-- User passwords are encrypted.
-##### Coach User policies
-- Coaches are able to activate and deactivate availability at any given time.
-##### Session policies
-- The time limit for every session is 20min. Sessions cut after that time.
-- When there is one minute left, the app notifies both users in the session.
-- The app connects you to the closest coach according to your location.
-- Coaches who are not online must not appear during searches.
-- The session starts when both user and coach hit connect.
-##### Subsription policies
-- The user can cancel subscriptions at any given time.
-- The starter package subscription gives the right for 2 sessions every month.
-- The pro package subscription gives the right for 8 sessions every month.
-- Sessions not used do not accumulate for next month.
-##### Review policies
-- A user can only review a coach after a session.
-##### Payment policies
-- 20minCoach gains a 40% of the payment for every starter package subscription. -> $11.99 netIncome -> $5.99 for 2 sessions
-- 20minCoach gains a 20% of the payment for every pro package subscription. -> $47.99 netIncome -> $5.99 for 8 sessions
-- Coaches gain $3.60 per session at a minimum (1 star).
-- Coaches gains per session increase by 0.60 cents for each star, going to a maximum of $5.99 at 5 stars.
-##### Notification policies
-- The coach receives a notification when the user tries to connect.
-- A request for connection lasts 10min, after that, it expires.
+  getProSessions() {
+    return this.proSessions;
+  }
+}
 
-Business rules might change along the system’s lifespan. Their modifications must be done only through the business layer.
+export default SubscriptionPolicy;
+```
+A class from the model that uses this policy should include it like this:
+
+```js
+// models/CommonUser.js
+import SubscriptionPolicy from '../business/SubscriptionPolicy';  // IMPORT THE BUSINESS POLICY
+
+class CommonUser {
+  availableSessions = 0;
+
+// … Constructor
+
+  setStarterSessions() {
+    const policy = new SubscriptionPolicy();			 
+    this.availableSessions = policy.getStarterSessions();		// ALWAYS RETRIEVE INFORMATION FROM THIS BUSINESS RULES
+  }
+
+  setProSessions() {
+    const policy = new SubscriptionPolicy();
+    this.availableSessions = policy.getProSessions();		// ALWAYS RETRIEVE INFORMATION FROM THIS BUSINESS RULES
+  }
+
+  getAvailableSessions() {
+    return this.availableSessions;
+  }
+// Other methods…
+}
+
+export default CommonUser;
+```
 
 ### 4.6 Services
 
-All services will be kept in their own folder, except the security module, which will be separate from this one.
+All APIs services must go inside the [services folder]( src/services). The one exception is the security service, which belongs in its own folder.
 
-The system integrates several third-party APIs to provide its services to the user. As such, the services layer includes an abstract class to generalize the creation of API services. All API services inherit from APITemplate.js for consistency:
+APIs should not be called from components. Always communicate through a service to obtain results.
+
+#### API implementation
+First off, services are implemented following a general template: the [APITemplate.js](src/services/APITemplate.js). All APIServices must inherit from this abstract class.
 ```js
 class APITemplate {
   apiKey = '';
@@ -151,25 +166,58 @@ class APITemplate {
   }
 }
 ```
+To illustrate how to make a service, check the LogService API. Steps are marked in the code below:
+```js
+import APITemplate from './APITemplate.js';
+import * as Sentry from '@sentry/react';	// IMPORT SCOPED PACKAGES ACCORDING TO THE API BEING IMPLEMENTED
+import logger from '../logging/Logger';
+import { LogLevel } from '../logging/LogLevel';  
 
-At the moment, the only implementation is the security and logging service. However, a plan has been established to decide the specific clients that the web app will use. The following section justifies the decisions made for service technology, prioritizing pricing and features.
+class LogService extends APITemplate { // INHERIT FROM APITEMPLATE
 
-#### Concrete services:
+  constructor() {
+    super();
+// SOME ATRIBUTES MIGHT BE LEFT EMPTY. 
+    this.baseUrl = 'https://7b74e3446139975f93e558503e5b8848@o4510071643832320.ingest.us.sentry.io/4510071645536256';
 
-##### Notification service
-For notifications, the API selected is OneSignal. It has a free plan which includes unlimited mobile push & web push for up to 10,000 subscribers.
-##### Payment service
-A variety of payment methods must be included in the system. An abstract parent class is used to create different payment methods that can be configured separately.
-##### Security service
-In order to manage user roles and permissions, Auth0 will be integrated in the system. It manages must security processes on its own, assuring protection to coaches and common users’ data.
-##### Video session service
-The service Daily.co allows 20minCoach to connect users and coaches in video sessions. It is compatible with react and negotiates a reasonable price of $0.0015 per videocall. Since 20minCoach gives 8 sessions per month at maximum, payments won’t be excessive.
-##### Geolocation service
-Due to its easy integration, Google Maps API will be used for this project. It is specially useful to connect users according to their proximity by calculating distances.
-##### Image storage service
-Cloudinary is the API proposed for saving avatar and portfolio images. It includes 25 GB of storage with its free plan.
-##### Log service
-Sentry will register logs on the web app and save them for a 2-year period. Its subscription is different because it escalates by plans and not by storage usage.
+  }
+
+  // Services extended from APITemplate should implement their own initialize method
+  initialize() {
+    logger.log('console', LogLevel.INFO, {message: 'LogService initialized successfully'})
+    Sentry.init({
+    dsn: this.baseUrl
+    });
+
+  }
+// MORE SPECIFIC API METHODS
+}
+export default LogService;
+```
+#### Services initialization
+The appropriate file to initialize APIs is the main.tsx file found inside the src folder. Services initializations should look like this:
+```js
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
+import LogService from "./services/LogService.js";	// IMPORT THE SERVICE TO INITIALIZE
+
+const logService = new LogService();			// CREATE A NEW INSTANCE
+logService.initialize();				// RUN THE INITIALIZE METHOD
+
+createRoot(document.getElementById("root")!).render(<App />);
+```
+#### Future implementations
+A plan has been developed to expand the API catalog. Check the next table to learn which services 20minCoach should have.
+| Service File             | Description                  |
+|--------------------------|------------------------------|
+| NotificationService.js   | OneSignal API                |
+| PaymentService.js        | Payment processing           |
+| SecurityService.js       | Auth0 integration            |
+| VideoSessionService.js   | Daily.co video calls         |
+| GeolocationService.js    | Google Maps API              |
+| ImageStorageService.js   | Cloudinary storage           |
+| LogService.js            | Sentry logging               |
 
 ### 4.7 Background jobs
 
