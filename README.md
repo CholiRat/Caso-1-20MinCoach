@@ -22,103 +22,106 @@ This repository includes a collection of proof of concepts. It serves as a guide
 This document details the architecture for the coaching platform 20minCoach. A system that allows connection with professionals from a variety of areas on short video sessions. The document describes necessary aspects for the correct implementation of the software. Among these are the decisions that back up the design, instructions and explanations for the proof of concepts, descriptions for all the modules, and other relevant information according to the section.
 
 ### Project Structure:
+
+```bash
 Caso-1-20MinCoach/
 ├── diagrams/
 ├── img/
-└── src/
-    ├── background/
-    │   ├── BackgroundJobsInvoker.js
-    │   ├── IBackgroundJobCommand.js
-    │   ├── IRealTimeListener.js
-    │   ├── RefreshAvailableCoaches.js
-    │   └── SessionStatusListener.js
-    ├── business/
-    │   ├── CoachUserPolicy.js
-    │   ├── CommonUserPolicy.js
-    │   ├── NotificationPolicy.js
-    │   ├── PaymentPolicy.js
-    │   ├── ReviewPolicy.js
-    │   ├── SessionPolicy.js
-    │   └── SubscriptionPolicy.js
-    ├── components/
-    │   ├── ui/
-    │   ├── Features.tsx
-    │   ├── Footer.tsx
-    │   ├── Header.tsx
-    │   ├── Hero.tsx
-    │   └── Pricing.tsx
-    ├── controllers/
-    │   ├── CoachController.ts
-    │   ├── FormController.ts
-    │   ├── LoginController.ts
-    │   ├── MainPageController.ts
-    │   ├── ReviewFormController.ts
-    │   └── UserFormController.ts
-    ├── exceptionHandling/
-    │   ├── ExceptionCatalog.js
-    │   └── ExceptionHandler.js
-    ├── hooks/
-    │   ├── use-mobile.tsx
-    │   ├── use-toast.ts
-    │   ├── useExceptionHandler.js
-    │   └── useLogger.js
-    ├── lib/
-    │   └── utils.ts
-    ├── linterConfig/
-    │   ├── demo-linter.js
-    │   ├── linter-rules.mjs
-    │   └── no-spanish-symbols.js
-    ├── logging/
-    │   ├── ConsoleLogger.js
-    │   ├── ILogStrategy.js
-    │   ├── LogLevel.js
-    │   ├── Logger.js
-    │   └── SentryLogger.js
-    ├── middleware/
-    │   ├── ErrorHandlingMiddleware.ts
-    │   ├── InterceptorMiddleware.ts
-    │   ├── LoggingMiddleware.ts
-    │   ├── MiddlewareApiClient.ts
-    │   ├── MiddlewareBaseHandler.ts
-    │   ├── MiddlewareHandler.ts
-    │   └── PermissionsMiddleware.ts
-    ├── models/
-    │   ├── CoachUser.ts
-    │   ├── CommonUser.ts
-    │   ├── Enumerations.ts
-    │   ├── IReviewBuilder.ts
-    │   ├── RequestedSession.ts
-    │   ├── Review.ts
-    │   ├── ReviewBuilder.ts
-    │   ├── Session.ts
-    │   ├── Subscription.ts
-    │   ├── User.ts
-    │   └── UserContact.ts
-    ├── pages/
-    │   ├── CoachProfile.tsx
-    │   ├── Index.tsx
-    │   ├── NotFound.tsx
-    │   └── SearchCoach.tsx
-    ├── services/
-    │   ├── APITemplate.js
-    │   └── LogService.js
-    ├── stateManagement/
-    │   ├── CurrentSessionListener.js
-    │   ├── IWebStateListener.js
-    │   └── WebState.js
-    ├── utilities/
-    │   ├── ConfigUtils.js
-    │   ├── Utilities.js
-    │   └── dateUtils.js
-    ├── validators/
-    │   ├── CommonUserValidator.js
-    │   └── IValidator.js
-    ├── App.css
-    ├── App.tsx
-    ├── index.css
-    ├── main.tsx
-    └── vite-env.d.ts
+├── src/
+│   ├── background/
+│   │   ├── BackgroundJobsInvoker.js
+│   │   ├── IBackgroundJobCommand.js
+│   │   ├── IRealTimeListener.js
+│   │   ├── RefreshAvailableCoaches.js
+│   │   └── SessionStatusListener.js
+│   ├── business/
+│   │   ├── CoachUserPolicy.js
+│   │   ├── CommonUserPolicy.js
+│   │   ├── NotificationPolicy.js
+│   │   ├── PaymentPolicy.js
+│   │   ├── ReviewPolicy.js
+│   │   ├── SessionPolicy.js
+│   │   └── SubscriptionPolicy.js
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── Features.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Header.tsx
+│   │   ├── Hero.tsx
+│   │   └── Pricing.tsx
+│   ├── controllers/
+│   │   ├── CoachController.ts
+│   │   ├── FormController.ts
+│   │   ├── LoginController.ts
+│   │   ├── MainPageController.ts
+│   │   ├── ReviewFormController.ts
+│   │   └── UserFormController.ts
+│   ├── exceptionHandling/
+│   │   ├── ExceptionCatalog.js
+│   │   └── ExceptionHandler.js
+│   ├── hooks/
+│   │   ├── use-mobile.tsx
+│   │   ├── use-toast.ts
+│   │   ├── useExceptionHandler.js
+│   │   └── useLogger.js
+│   ├── lib/
+│   │   └── utils.ts
+│   ├── linterConfig/
+│   │   ├── demo-linter.js
+│   │   ├── linter-rules.mjs
+│   │   └── no-spanish-symbols.js
+│   ├── logging/
+│   │   ├── ConsoleLogger.js
+│   │   ├── ILogStrategy.js
+│   │   ├── LogLevel.js
+│   │   ├── Logger.js
+│   │   └── SentryLogger.js
+│   ├── middleware/
+│   │   ├── ErrorHandlingMiddleware.ts
+│   │   ├── InterceptorMiddleware.ts
+│   │   ├── LoggingMiddleware.ts
+│   │   ├── MiddlewareApiClient.ts
+│   │   ├── MiddlewareBaseHandler.ts
+│   │   ├── MiddlewareHandler.ts
+│   │   └── PermissionsMiddleware.ts
+│   ├── models/
+│   │   ├── CoachUser.ts
+│   │   ├── CommonUser.ts
+│   │   ├── Enumerations.ts
+│   │   ├── IReviewBuilder.ts
+│   │   ├── RequestedSession.ts
+│   │   ├── Review.ts
+│   │   ├── ReviewBuilder.ts
+│   │   ├── Session.ts
+│   │   ├── Subscription.ts
+│   │   ├── User.ts
+│   │   └── UserContact.ts
+│   ├── pages/
+│   │   ├── CoachProfile.tsx
+│   │   ├── Index.tsx
+│   │   ├── NotFound.tsx
+│   │   └── SearchCoach.tsx
+│   ├── services/
+│   │   ├── APITemplate.js
+│   │   └── LogService.js
+│   ├── stateManagement/
+│   │   ├── CurrentSessionListener.js
+│   │   ├── IWebStateListener.js
+│   │   └── WebState.js
+│   ├── utilities/
+│   │   ├── ConfigUtils.js
+│   │   ├── Utilities.js
+│   │   └── dateUtils.js
+│   ├── validators/
+│   │   ├── CommonUserValidator.js
+│   │   └── IValidator.js
+│   ├── App.css
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
 └── README.md
+```
 
 ## 2. Scope
 This iteration of the project contemplates the base functionalities for 20minCoach. A list of characteristics for the initial version of the design has been made:
