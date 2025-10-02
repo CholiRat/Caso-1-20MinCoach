@@ -176,6 +176,49 @@ Sentry will register logs on the web app and save them for a 2-year period. Its 
 ### 4.8 Validators
 
 ### 4.9 State management
+The web app state will be controlled by the Singleton class [WebState.js]( stateManagement/WebState.js). Each time its state gets modified, it will notify all [IWebStateListener objects]( src/stateManagement/IWebStateListener.js).
+
+Communication between layers goes as follows:
+
+Background jobs/Real time Listeners → Services → StateManagement 
+
+#### Imports:
+This first import is necessary for both updaters and suscribers. The second one is reserved to stateManagement's suscribers.
+```js
+import { webState } from '../stateManagement/WebState.js';
+import IWebStateListener from '../stateManagement/IWebStateListener';
+```
+#### Subscribers structure:
+All classes that require updates must extend from the IWebStateListener and include the method subscribe. Follow this class that depends on stateManagement information.
+
+```js
+import { webState } from '../stateManagement/WebState.js';             // IMPORT SINGLETON WEBSTATE
+import IWebStateListener from '../stateManagement/IWebStateListener';
+import logger from '../logging/Logger';
+import { LogLevel } from '../logging/LogLevel';
+
+class SessionListener extends IWebStateListener {
+  constructor() {
+    super();
+    webState.subscribe(this);                // SUBSCRIBE TO THE PUBLISHER CLASS
+  }
+
+  update(webState) {
+    const session = webState.getActiveSession();          // CONFIRM THE STATE OF THE VALUE THIS COMPONENT IS CHECKING
+    // EXECUTE AN ACTION DEPENDING ON RESULTS
+    if (session) {
+      logger.log('console', LogLevel.INFO, {message: 'Session is currently active'})
+    } else {
+      logger.log('console', LogLevel.INFO, {message: 'Session is currently inactive'})
+    }
+  }
+}
+const sessionListener = new SessionListener();
+export default sessionListener;
+```
+#### Notification structure:
+All state changes must be made through setters and send a notification to subscribers via notify()
+
 
 ### 4.10 Styles
 The design we chose to create the page is a Moder UI Design widely used in modern pages of 2025, which has the following characteristics:
