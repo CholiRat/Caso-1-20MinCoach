@@ -233,7 +233,7 @@ export default CommonUserValidator;
 ```
 Make sure to include createValidator() and validate(data) in all validators classes. 
 
-Find more information about validations with ZOD in ![the official ZOD documentation](https://zod.dev)
+Find more information about validations with ZOD in [the official ZOD documentation](https://zod.dev)
 
 ### 4.9 State management
 The web app state will be controlled by the Singleton class [WebState.js]( stateManagement/WebState.js). Each time its state gets modified, it will notify all [IWebStateListener objects]( src/stateManagement/IWebStateListener.js).
