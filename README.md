@@ -4,7 +4,7 @@
 
 ### Students
 - Alexander Brenes Garita - 2018191805
-- Andres Baldi Mora
+- Andres Baldi Mora - 2024088934
 - Lindsay Nahome Marín Sánchez - 2024163904
 
 ### Course
@@ -59,6 +59,9 @@ npm run dev
 5.	Additionally, install these commonly required packages locally if absent:
 ```sh
 npm install --save-dev eslint vite @vitejs/plugin-react eslint-plugin-react eslint-plugin-react-hooks
+
+npm install axios
+
 ```
 
 You are all set to start the implementation of 20minCoach.
